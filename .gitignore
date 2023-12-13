@@ -28,3 +28,5 @@ dist-ssr
 *.prover
 *.verifier
 /program/outputs/
+
+yarn.lock
