@@ -30,13 +30,13 @@ program fortune.aleo {
     ) {
         let random_number: u32 = ChaCha::rand_u32();
         Mapping::set(random_number_map, player, random_number);
-        let win: bool = (random_number%2) == bet;
+        let win: bool = (random_number % 2u32) == bet;
         let reward: u64 = bet_amount * 2u64;
         let current_player_amount: u64 = Mapping::get(balance, player);
         let casino_balance: u64 = Casino.amount;
 
         assert(current_player_amount > bet_amount);
-
+    
         if (win) {
             current_player_amount = current_player_amount + reward;
             casino_balance = casino_balance - reward;
