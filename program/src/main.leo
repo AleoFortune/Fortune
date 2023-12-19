@@ -1,5 +1,3 @@
-// import credits_test.leo;
-
 // The 'roulette' program.
 program cassino_game_test_6.aleo {
 
@@ -10,6 +8,12 @@ program cassino_game_test_6.aleo {
   record WAC {
     owner: address,
     amount: u64,
+  }
+
+  record winner_private {
+    owner: address,
+    win: bool,
+    reward: u64
   }
 
   /* Mint */
@@ -58,21 +62,37 @@ program cassino_game_test_6.aleo {
     return (remaining, transferred);
   }
 
-  transition random_number(public receiver: address) {
-    return then finalize(receiver);
+
+    transition make_odd_even_bet_private(casino: WAC, player: WAC, winning: bool, bet_amount: u64,)->(WAC, WAC) {
+          let player_balance: u64 = player.amount;
+          let casino_balance: u64 = casino.amount;
+
+
+          if (winning) {
+            player_balance += bet_amount;
+            casino_balance -= bet_amount;
+          }
+          else {
+            player_balance -= bet_amount;
+            casino_balance += bet_amount;
+          }
+
+            let updated_player_WAC: WAC = WAC {
+              owner: player.owner,
+              amount: player_balance
+            };
+
+            let updated_casino_WAC: WAC = WAC {
+              owner: casino.owner,
+              amount: casino_balance
+            };
+    return (updated_player_WAC, updated_casino_WAC);
   }
 
-  finalize random_number(public receiver: address) {
-    let spin: u32 = ChaCha::rand_u32();
-    let random: u32 = Mapping::get_or_use(random_number_map, receiver, 0u32);
-    Mapping::set(random_number_map, receiver, spin);
-  }
-
-    transition make_odd_even_bet_public(
+  transition make_odd_even_bet_public(
         public casino_owner: address,
         public bet_amount: u64,
-        public bet: u32,
-        public player: address
+        public bet: u32
     ){
         assert(bet_amount > 0u64);
         assert(bet == 0u32 || bet == 1u32);
