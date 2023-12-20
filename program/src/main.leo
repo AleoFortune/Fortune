@@ -1,7 +1,8 @@
+// fuego branch contracts
 // The 'roulette' program.
 program cassino_game_test_6.aleo {
 
-    mapping account: address => u32;
+    mapping account: address => u64;
     mapping random_number_map: address=>u32;
     mapping winner: address=>bool;
 
