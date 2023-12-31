@@ -6,6 +6,15 @@ program cassino_game_test_6.aleo {
     mapping random_number_map: address=>u32;
     mapping winner: address=>bool;
 
+
+    // Mapping for red-black bets
+    //mapping red_black_bet: address => (u64, bool); // (bet amount, isRed) --A mapping's value cannot be a tuple
+    mapping red_bet: address => u64; // red bet amount
+    mapping black_bet: address => u64; // black bet amount
+
+
+
+
   record WAC {
     owner: address,
     amount: u64,
@@ -64,29 +73,29 @@ program cassino_game_test_6.aleo {
   }
 
 
-    transition make_odd_even_bet_private(casino: WAC, player: WAC, winning: bool, bet_amount: u64,)->(WAC, WAC) {
-          let player_balance: u64 = player.amount;
-          let casino_balance: u64 = casino.amount;
+  transition make_odd_even_bet_private(casino: WAC, player: WAC, winning: bool, bet_amount: u64,)->(WAC, WAC) {
+    let player_balance: u64 = player.amount;
+    let casino_balance: u64 = casino.amount;
 
 
-          if (winning) {
+      if (winning) {
             player_balance += bet_amount;
             casino_balance -= bet_amount;
-          }
-          else {
+      }
+      else {
             player_balance -= bet_amount;
             casino_balance += bet_amount;
-          }
+      }
 
-            let updated_player_WAC: WAC = WAC {
-              owner: player.owner,
-              amount: player_balance
-            };
+    let updated_player_WAC: WAC = WAC {
+      owner: player.owner,
+      amount: player_balance
+    };
 
-            let updated_casino_WAC: WAC = WAC {
-              owner: casino.owner,
-              amount: casino_balance
-            };
+    let updated_casino_WAC: WAC = WAC {
+      owner: casino.owner,
+      amount: casino_balance
+    };
     return (updated_player_WAC, updated_casino_WAC);
   }
 
@@ -100,9 +109,9 @@ program cassino_game_test_6.aleo {
 
         return then finalize(casino_owner, bet_amount, bet, self.caller);
         
-    }
+  }
 
-    finalize make_odd_even_bet_public(
+  finalize make_odd_even_bet_public(
         public casino_owner: address,
         public bet_amount: u64,
         public bet: u32,
