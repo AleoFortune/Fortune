@@ -24,6 +24,16 @@ mapping winner:
 	key as address.public;
 	value as boolean.public;
 
+
+mapping red_bet:
+	key as address.public;
+	value as u64.public;
+
+
+mapping black_bet:
+	key as address.public;
+	value as u64.public;
+
 function deposit_public:
     input r0 as address.public;
     input r1 as u64.public;
@@ -38,7 +48,7 @@ finalize deposit_public:
     set r3 into account[r0];
 
 
-function desposit_private:
+function deposit_private:
     input r0 as address.private;
     input r1 as u64.private;
     cast r0 r1 into r2 as WAC.record;

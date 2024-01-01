@@ -11,6 +11,7 @@ program cassino_game_test_6.aleo {
     //mapping red_black_bet: address => (u64, bool); // (bet amount, isRed) --A mapping's value cannot be a tuple
     mapping red_bet: address => u64; // red bet amount
     mapping black_bet: address => u64; // black bet amount
+    
 
 
 
@@ -36,7 +37,7 @@ program cassino_game_test_6.aleo {
     Mapping::set(account, receiver, receiver_amount + amount);
   }
 
-  transition desposit_private(receiver: address, amount: u64) -> WAC {
+  transition deposit_private(receiver: address, amount: u64) -> WAC {
     return WAC {
       owner: receiver,
       amount: amount,
@@ -98,6 +99,7 @@ program cassino_game_test_6.aleo {
     };
     return (updated_player_WAC, updated_casino_WAC);
   }
+
 
   transition make_odd_even_bet_public(
         public casino_owner: address,
