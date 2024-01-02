@@ -1,5 +1,5 @@
 // The 'roulette' program.
-program cassino_game_test_6.aleo {
+program cassino_game_test_11.aleo {
 
     mapping account: address => u64;
     mapping random_number_map: address=>u32;
@@ -64,7 +64,7 @@ program cassino_game_test_6.aleo {
   }
 
 
-    transition make_odd_even_bet_private(casino: WAC, player: WAC, bet_amount: u64, public bet: u32, public random_number: u32)->(WAC, WAC) {
+  transition make_odd_even_bet_private(casino: WAC, player: WAC, bet_amount: u64, public bet: u32, public random_number: u32)->(WAC, WAC) {
           let win: bool = (random_number % 2u32) == bet;
           let player_balance: u64 = player.amount;
           let casino_balance: u64 = casino.amount;
@@ -95,7 +95,7 @@ program cassino_game_test_6.aleo {
         public casino_owner: address,
         public bet_amount: u64,
         public bet: u32,
-        public random_number: u32
+        public random_number: u32,
     ){
         assert(bet_amount > 0u64);
         assert(bet == 0u32 || bet == 1u32);
@@ -113,21 +113,21 @@ program cassino_game_test_6.aleo {
     ) {
         let win: bool = (random_number % 2u32) == bet;
         Mapping::set(winner, player, win); // winner map is for testing purpose, I will remove it when I finish the contract and tests.
-        let reward: u64 = bet_amount * 2u64;
+        //let reward: u64 = bet_amount * 2u64;
         let current_player_amount: u64 = Mapping::get_or_use(account, player, 0u64);
         let casino_balance: u64 = Mapping::get_or_use(account, casino_owner, 0u64);
 
         assert(current_player_amount > bet_amount);
     
         if (win) {
-            current_player_amount = current_player_amount + reward;
-            casino_balance = casino_balance - reward;
+            current_player_amount = current_player_amount + bet_amount;
+            casino_balance = casino_balance - bet_amount;
             Mapping::set(account, player, current_player_amount);
             Mapping::set(account, casino_owner, casino_balance);
 
         } else {
-            current_player_amount = current_player_amount - reward;
-            casino_balance = casino_balance + reward;
+            current_player_amount = current_player_amount - bet_amount;
+            casino_balance = casino_balance + bet_amount;
             Mapping::set(account, player, current_player_amount);
             Mapping::set(account, casino_owner, casino_balance);
 
