@@ -157,47 +157,55 @@ program cassino_game_test_6.aleo {
           || number == 27u32 || number == 30u32 || number == 32u32 || number == 34u32 || number == 36u32;
   }
 
-  // Transition for red-black bet
-  transition make_red_black_bet_public(
-      public casino_owner: address,
-      public bet_amount: u64,
-      public bet_on_red: bool
-  ){
-      assert(bet_amount > 0u64);
+// Transition for red-black bet
+transition make_red_black_bet_public(
+    public casino_owner: address,
+    public bet_amount: u64,
+    public bet_on_red: bool
+){
+    assert(bet_amount > 0u64);
+    // Perform any necessary preliminary checks here
 
-      return then finalize(casino_owner, bet_amount, bet_on_red, self.caller);
+    return then finalize(casino_owner, bet_amount, bet_on_red, self.caller);
 }
 
-  // Finalize the red-black bet
-  finalize make_red_black_bet_public(
-      public casino_owner: address,
-      public bet_amount: u64,
-      public bet_on_red: bool,
-      public player: address
-  ) {
-      let spin: u32 = ChaCha::rand_u32() % 37u32; // 0 to 36
-      let is_red: bool = is_number_red(spin); //ERROR: Forbidden operation: Finalize cannot invoke a 'call'
 
-      let win: bool = (bet_on_red && is_red) || (!bet_on_red && !is_red && spin != 0u32);
-      Mapping::set(winner, player, win);
+// Finalize the red-black bet
+finalize make_red_black_bet_public(
+    public casino_owner: address,
+    public bet_amount: u64,
+    public bet_on_red: bool,
+    public player: address
+){
+    let spin: u32 = ChaCha::rand_u32() % 37u32; // 0 to 36
 
-      let reward: u64 = bet_amount * 2u64;
-      let current_player_amount: u64 = Mapping::get_or_use(account, player, 0u64);
-      let casino_balance: u64 = Mapping::get_or_use(account, casino_owner, 0u64);
+    // Inline check for red number
+    let is_red: bool = spin == 1u32 || spin == 3u32 || spin == 5u32 || spin == 7u32 || spin == 9u32
+        || spin == 12u32 || spin == 14u32 || spin == 16u32 || spin == 18u32
+        || spin == 19u32 || spin == 21u32 || spin == 23u32 || spin == 25u32
+        || spin == 27u32 || spin == 30u32 || spin == 32u32 || spin == 34u32 || spin == 36u32;
 
-      assert(current_player_amount >= bet_amount);
+    let win: bool = (bet_on_red && is_red) || (!bet_on_red && !is_red && spin != 0u32);
+    Mapping::set(winner, player, win);
 
-      if (win) {
-          current_player_amount += reward;
-          casino_balance -= reward;
-      } else {
-          current_player_amount -= bet_amount;
-          casino_balance += bet_amount;
-      }
+    let reward: u64 = bet_amount * 2u64;
+    let current_player_amount: u64 = Mapping::get_or_use(account, player, 0u64);
+    let casino_balance: u64 = Mapping::get_or_use(account, casino_owner, 0u64);
 
-      Mapping::set(account, player, current_player_amount);
-      Mapping::set(account, casino_owner, casino_balance);
+    assert(current_player_amount >= bet_amount);
+
+    if (win) {
+        current_player_amount += reward;
+        casino_balance -= bet_amount;
+    } else {
+        current_player_amount -= bet_amount;
+        casino_balance += bet_amount;
+    }
+
+    Mapping::set(account, player, current_player_amount);
+    Mapping::set(account, casino_owner, casino_balance);
 }
+
 }
 
 /*
