@@ -164,7 +164,7 @@ transition make_red_black_bet_public(
     public bet_on_red: bool
 ){
     assert(bet_amount > 0u64);
-    // Perform any necessary preliminary checks here
+
 
     return then finalize(casino_owner, bet_amount, bet_on_red, self.caller);
 }
