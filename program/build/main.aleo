@@ -24,16 +24,6 @@ mapping winner:
 	key as address.public;
 	value as boolean.public;
 
-
-mapping red_bet:
-	key as address.public;
-	value as u64.public;
-
-
-mapping black_bet:
-	key as address.public;
-	value as u64.public;
-
 function deposit_public:
     input r0 as address.public;
     input r1 as u64.public;
@@ -140,3 +130,83 @@ finalize make_odd_even_bet_public:
     set r15 into account[r0];
     ternary r7 r12 r14 into r16;
     ternary r7 r13 r15 into r17;
+
+
+closure is_number_red:
+    input r0 as u32;
+    is.eq r0 1u32 into r1;
+    is.eq r0 3u32 into r2;
+    or r1 r2 into r3;
+    is.eq r0 5u32 into r4;
+    or r3 r4 into r5;
+    is.eq r0 7u32 into r6;
+    or r5 r6 into r7;
+    is.eq r0 9u32 into r8;
+    or r7 r8 into r9;
+    is.eq r0 12u32 into r10;
+    or r9 r10 into r11;
+    is.eq r0 14u32 into r12;
+    or r11 r12 into r13;
+    is.eq r0 16u32 into r14;
+    or r13 r14 into r15;
+    is.eq r0 18u32 into r16;
+    or r15 r16 into r17;
+    is.eq r0 19u32 into r18;
+    or r17 r18 into r19;
+    is.eq r0 21u32 into r20;
+    or r19 r20 into r21;
+    is.eq r0 23u32 into r22;
+    or r21 r22 into r23;
+    is.eq r0 25u32 into r24;
+    or r23 r24 into r25;
+    is.eq r0 27u32 into r26;
+    or r25 r26 into r27;
+    is.eq r0 30u32 into r28;
+    or r27 r28 into r29;
+    is.eq r0 32u32 into r30;
+    or r29 r30 into r31;
+    is.eq r0 34u32 into r32;
+    or r31 r32 into r33;
+    is.eq r0 36u32 into r34;
+    or r33 r34 into r35;
+    output r35 as boolean;
+
+
+function make_red_black_bet_public:
+    input r0 as address.public;
+    input r1 as u64.public;
+    input r2 as boolean.public;
+    gt r1 0u64 into r3;
+    assert.eq r3 true;
+    async make_red_black_bet_public r0 r1 r2 self.caller into r4;
+    output r4 as cassino_game_test_6.aleo/make_red_black_bet_public.future;
+
+finalize make_red_black_bet_public:
+    input r0 as address.public;
+    input r1 as u64.public;
+    input r2 as boolean.public;
+    input r3 as address.public;
+    rand.chacha into r4 as u32;
+    rem r4 37u32 into r5;
+    call is_number_red r5 into r6;
+    and r2 r6 into r7;
+    not r2 into r8;
+    not r6 into r9;
+    and r8 r9 into r10;
+    is.neq r5 0u32 into r11;
+    and r10 r11 into r12;
+    or r7 r12 into r13;
+    set r13 into winner[r3];
+    mul r1 2u64 into r14;
+    get.or_use account[r3] 0u64 into r15;
+    get.or_use account[r0] 0u64 into r16;
+    gte r15 r1 into r17;
+    assert.eq r17 true;
+    add r15 r14 into r18;
+    sub r16 r14 into r19;
+    sub r15 r1 into r20;
+    add r16 r1 into r21;
+    ternary r13 r18 r20 into r22;
+    ternary r13 r19 r21 into r23;
+    set r22 into account[r3];
+    set r23 into account[r0];
