@@ -1,7 +1,6 @@
 // fuego branch contracts
 // The 'roulette' program.
 
-//? constant declaration import ile yapilabilir?????
 
 program cassino_game_test_15.aleo {
 
@@ -316,6 +315,58 @@ finalize make_low_high_bet_public(
     Mapping::set(account, casino_owner, casino_balance);
 }
 
+
+/* Column Bet */
+
+// Transition for column bet
+transition make_column_bet_public(
+    public casino_owner: address,
+    public bet_amount: u64,
+    public bet_column: u32
+){
+    assert(bet_amount > 0u64);
+    assert(bet_column >= 1u32 && bet_column <= 3u32);
+
+    return then finalize(casino_owner, bet_amount, bet_column, self.caller);
+}
+
+// Finalize the column bet
+finalize make_column_bet_public(
+    public casino_owner: address,
+    public bet_amount: u64,
+    public bet_column: u32,
+    public player: address
+){
+    let spin: u32 = ChaCha::rand_u32() % 37u32; // 0 to 36
+    Mapping::set(random_number_map, player, spin);
+
+    let win: bool = false;
+    if (bet_column == 1u32) {
+        win = (spin % 3u32 == 1u32);
+    } else if (bet_column == 2u32) {
+        win = (spin % 3u32 == 2u32);
+    } else if (bet_column == 3u32) {
+        win = (spin % 3u32 == 0u32 && spin != 0u32);
+    }
+
+    Mapping::set(winner, player, win);
+
+    let current_player_amount: u64 = Mapping::get_or_use(account, player, 0u64);
+    let casino_balance: u64 = Mapping::get_or_use(account, casino_owner, 0u64);
+
+    assert(current_player_amount >= bet_amount);
+
+    if (win) {
+        current_player_amount += bet_amount * 2u64; // Double the bet amount as reward
+        casino_balance -= bet_amount * 2u64;
+    } else {
+        current_player_amount -= bet_amount;
+        casino_balance += bet_amount;
+    }
+
+    Mapping::set(account, player, current_player_amount);
+    Mapping::set(account, casino_owner, casino_balance);
+}
 
 
 
