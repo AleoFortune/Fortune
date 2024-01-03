@@ -58,9 +58,9 @@ program cassino_game_test_11.aleo {
     return then finalize(self.caller);
   }
   finalize random_number_generate(public player: address) {
-    let spin: u32 = ChaCha::rand_u32();
-    let random_number: u32 = Mapping::get_or_use(random_number_map, player, 0u32);
-    Mapping::set(random_number_map, player, spin);
+    let random_number: u32 = ChaCha::rand_u32();
+    let random_number_mod37: u32 = random_number % 37u32; // 0 to 36
+    Mapping::set(random_number_map, player, random_number_mod37);
   }
 
 
