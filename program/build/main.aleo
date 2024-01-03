@@ -200,3 +200,95 @@ finalize make_red_black_bet_public:
     ternary r47 r52 r54 into r56;
     set r55 into account[r3];
     set r56 into account[r0];
+
+
+function make_dozen_bet_public:
+    input r0 as address.public;
+    input r1 as u64.public;
+    input r2 as u32.public;
+    gt r1 0u64 into r3;
+    assert.eq r3 true;
+    gte r2 1u32 into r4;
+    lte r2 3u32 into r5;
+    and r4 r5 into r6;
+    assert.eq r6 true;
+    async make_dozen_bet_public r0 r1 r2 self.caller into r7;
+    output r7 as cassino_game_test_15.aleo/make_dozen_bet_public.future;
+
+finalize make_dozen_bet_public:
+    input r0 as address.public;
+    input r1 as u64.public;
+    input r2 as u32.public;
+    input r3 as address.public;
+    rand.chacha into r4 as u32;
+    rem r4 37u32 into r5;
+    set r5 into random_number_map[r3];
+    is.eq r2 1u32 into r6;
+    gte r5 1u32 into r7;
+    lte r5 12u32 into r8;
+    and r7 r8 into r9;
+    is.eq r2 2u32 into r10;
+    gte r5 13u32 into r11;
+    lte r5 24u32 into r12;
+    and r11 r12 into r13;
+    is.eq r2 3u32 into r14;
+    gte r5 25u32 into r15;
+    lte r5 36u32 into r16;
+    and r15 r16 into r17;
+    ternary r14 r17 false into r18;
+    ternary r10 r13 r18 into r19;
+    ternary r6 r9 r19 into r20;
+    set r20 into winner[r3];
+    get.or_use account[r3] 0u64 into r21;
+    get.or_use account[r0] 0u64 into r22;
+    gte r21 r1 into r23;
+    assert.eq r23 true;
+    mul r1 2u64 into r24;
+    add r21 r24 into r25;
+    mul r1 2u64 into r26;
+    sub r22 r26 into r27;
+    sub r21 r1 into r28;
+    add r22 r1 into r29;
+    ternary r20 r25 r28 into r30;
+    ternary r20 r27 r29 into r31;
+    set r30 into account[r3];
+    set r31 into account[r0];
+
+
+function make_low_high_bet_public:
+    input r0 as address.public;
+    input r1 as u64.public;
+    input r2 as boolean.public;
+    gt r1 0u64 into r3;
+    assert.eq r3 true;
+    async make_low_high_bet_public r0 r1 r2 self.caller into r4;
+    output r4 as cassino_game_test_15.aleo/make_low_high_bet_public.future;
+
+finalize make_low_high_bet_public:
+    input r0 as address.public;
+    input r1 as u64.public;
+    input r2 as boolean.public;
+    input r3 as address.public;
+    rand.chacha into r4 as u32;
+    rem r4 37u32 into r5;
+    set r5 into random_number_map[r3];
+    gte r5 1u32 into r6;
+    lte r5 18u32 into r7;
+    and r6 r7 into r8;
+    gte r5 19u32 into r9;
+    lte r5 36u32 into r10;
+    and r9 r10 into r11;
+    ternary r2 r8 r11 into r12;
+    set r12 into winner[r3];
+    get.or_use account[r3] 0u64 into r13;
+    get.or_use account[r0] 0u64 into r14;
+    gte r13 r1 into r15;
+    assert.eq r15 true;
+    add r13 r1 into r16;
+    sub r14 r1 into r17;
+    sub r13 r1 into r18;
+    add r14 r1 into r19;
+    ternary r12 r16 r18 into r20;
+    ternary r12 r17 r19 into r21;
+    set r20 into account[r3];
+    set r21 into account[r0];
