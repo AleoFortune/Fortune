@@ -113,7 +113,6 @@ program cassino_game_test_11.aleo {
     ) {
         let win: bool = (random_number % 2u32) == bet;
         Mapping::set(winner, player, win); // winner map is for testing purpose, I will remove it when I finish the contract and tests.
-        //let reward: u64 = bet_amount * 2u64;
         let current_player_amount: u64 = Mapping::get_or_use(account, player, 0u64);
         let casino_balance: u64 = Mapping::get_or_use(account, casino_owner, 0u64);
 
