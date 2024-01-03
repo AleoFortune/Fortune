@@ -114,23 +114,21 @@ program cassino_game_test_11.aleo {
         let win: bool = (random_number % 2u32) == bet;
         Mapping::set(winner, player, win); // winner map is for testing purpose, I will remove it when I finish the contract and tests.
         let current_player_amount: u64 = Mapping::get_or_use(account, player, 0u64);
-        let casino_balance: u64 = Mapping::get_or_use(account, casino_owner, 0u64);
+        let current_casino_balance: u64 = Mapping::get_or_use(account, casino_owner, 0u64);
 
         assert(current_player_amount > bet_amount);
     
         if (win) {
-            current_player_amount = current_player_amount + bet_amount;
-            casino_balance = casino_balance - bet_amount;
-            Mapping::set(account, player, current_player_amount);
-            Mapping::set(account, casino_owner, casino_balance);
-
+            current_player_amount += bet_amount;
+            current_casino_balance -= bet_amount;
         } else {
-            current_player_amount = current_player_amount - bet_amount;
-            casino_balance = casino_balance + bet_amount;
-            Mapping::set(account, player, current_player_amount);
-            Mapping::set(account, casino_owner, casino_balance);
+            current_player_amount -= bet_amount;
+            current_casino_balance += bet_amount;
+        }            
+        Mapping::set(account, player, current_player_amount);
+        Mapping::set(account, casino_owner, current_casino_balance);
 
-        }
+
     }
 
     transition make_straightup_bet_public(
@@ -152,22 +150,19 @@ program cassino_game_test_11.aleo {
         let win: bool = random_number == bet;
         Mapping::set(winner, player, win); // winner map is for testing purpose, I will remove it when I finish the contract and tests.
         let current_player_amount: u64 = Mapping::get_or_use(account, player, 0u64);
-        let casino_balance: u64 = Mapping::get_or_use(account, casino_owner, 0u64);
+        let current_casino_balance: u64 = Mapping::get_or_use(account, casino_owner, 0u64);
 
-        assert(current_player_amount > bet_amount);
+        // assert(current_player_amount > bet_amount);
     
         if (win) {
-            current_player_amount = current_player_amount + 35u64*bet_amount;
-            casino_balance = casino_balance - 35u64*bet_amount;
-            Mapping::set(account, player, current_player_amount);
-            Mapping::set(account, casino_owner, casino_balance);
-
+          current_player_amount += 35u64*bet_amount;
+          current_casino_balance -= 35u64*bet_amount;
         } else {
-            current_player_amount = current_player_amount - 35u64*bet_amount;
-            casino_balance = casino_balance + 35u64*bet_amount;
-            Mapping::set(account, player, current_player_amount);
-            Mapping::set(account, casino_owner, casino_balance);
+          current_player_amount -= bet_amount;
+          current_casino_balance += bet_amount;
+        }            
+        Mapping::set(account, player, current_player_amount);
+        Mapping::set(account, casino_owner, current_casino_balance);
 
-        }
     }
 }

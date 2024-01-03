@@ -130,14 +130,12 @@ finalize make_odd_even_bet_public:
     assert.eq r9 true;
     add r7 r1 into r10;
     sub r8 r1 into r11;
-    set r10 into account[r4];
-    set r11 into account[r0];
     sub r7 r1 into r12;
     add r8 r1 into r13;
-    set r12 into account[r4];
-    set r13 into account[r0];
     ternary r6 r10 r12 into r14;
     ternary r6 r11 r13 into r15;
+    set r14 into account[r4];
+    set r15 into account[r0];
 
 
 function make_straightup_bet_public:
@@ -158,19 +156,15 @@ finalize make_straightup_bet_public:
     set r5 into winner[r4];
     get.or_use account[r4] 0u64 into r6;
     get.or_use account[r0] 0u64 into r7;
-    gt r6 r1 into r8;
-    assert.eq r8 true;
-    mul 35u64 r1 into r9;
-    add r6 r9 into r10;
-    mul 35u64 r1 into r11;
-    sub r7 r11 into r12;
-    set r10 into account[r4];
-    set r12 into account[r0];
-    mul 35u64 r1 into r13;
-    sub r6 r13 into r14;
-    mul 35u64 r1 into r15;
-    add r7 r15 into r16;
-    set r14 into account[r4];
-    set r16 into account[r0];
-    ternary r5 r10 r14 into r17;
-    ternary r5 r12 r16 into r18;
+    mul 35u64 r1 into r8;
+    add r6 r8 into r9;
+    mul 35u64 r1 into r10;
+    sub r7 r10 into r11;
+    mul 35u64 r1 into r12;
+    sub r6 r12 into r13;
+    mul 35u64 r1 into r14;
+    add r7 r14 into r15;
+    ternary r5 r9 r13 into r16;
+    ternary r5 r11 r15 into r17;
+    set r16 into account[r4];
+    set r17 into account[r0];
