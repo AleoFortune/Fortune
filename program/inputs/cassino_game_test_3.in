@@ -1,4 +1,4 @@
-[make_odd_even_bet]
+[make_odd_even_bet_public]
 casino_owner: address = aleo1v7nuwtqnksjp7x59r936rlk5uew7zrlu0hsvflpagkep5k5qugyqw2xwa9;
 bet_amount: u64 = 10u64;
 bet: u32 = 0u32;
