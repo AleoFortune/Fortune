@@ -132,4 +132,42 @@ program cassino_game_test_11.aleo {
 
         }
     }
+
+    transition make_straightup_bet_public(
+      public casino_owner: address,
+      public bet_amount: u64,
+      public bet: u32,
+      public random_number: u32,){
+
+        return then finalize(casino_owner, bet_amount, bet, random_number, self.caller);
+      }
+
+    finalize make_straightup_bet_public(
+        public casino_owner: address,
+        public bet_amount: u64,
+        public bet: u32,
+        public random_number: u32,
+        public player: address
+    ) {
+        let win: bool = random_number == bet;
+        Mapping::set(winner, player, win); // winner map is for testing purpose, I will remove it when I finish the contract and tests.
+        let current_player_amount: u64 = Mapping::get_or_use(account, player, 0u64);
+        let casino_balance: u64 = Mapping::get_or_use(account, casino_owner, 0u64);
+
+        assert(current_player_amount > bet_amount);
+    
+        if (win) {
+            current_player_amount = current_player_amount + 35u64*bet_amount;
+            casino_balance = casino_balance - 35u64*bet_amount;
+            Mapping::set(account, player, current_player_amount);
+            Mapping::set(account, casino_owner, casino_balance);
+
+        } else {
+            current_player_amount = current_player_amount - 35u64*bet_amount;
+            casino_balance = casino_balance + 35u64*bet_amount;
+            Mapping::set(account, player, current_player_amount);
+            Mapping::set(account, casino_owner, casino_balance);
+
+        }
+    }
 }

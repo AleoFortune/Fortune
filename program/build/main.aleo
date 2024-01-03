@@ -1,4 +1,4 @@
-program cassino_game_test_13.aleo;
+program cassino_game_test_11.aleo;
 
 record WAC:
     owner as address.private;
@@ -23,7 +23,7 @@ function deposit_public:
     input r0 as address.public;
     input r1 as u64.public;
     async deposit_public r0 r1 into r2;
-    output r2 as cassino_game_test_13.aleo/deposit_public.future;
+    output r2 as cassino_game_test_11.aleo/deposit_public.future;
 
 finalize deposit_public:
     input r0 as address.public;
@@ -44,7 +44,7 @@ function withdraw_public:
     input r0 as address.public;
     input r1 as u64.public;
     async withdraw_public self.caller r0 r1 into r2;
-    output r2 as cassino_game_test_13.aleo/withdraw_public.future;
+    output r2 as cassino_game_test_11.aleo/withdraw_public.future;
 
 finalize withdraw_public:
     input r0 as address.public;
@@ -72,13 +72,13 @@ function withdraw_private:
 function random_number_generate:
     input r0 as address.public;
     async random_number_generate self.caller into r1;
-    output r1 as cassino_game_test_13.aleo/random_number_generate.future;
+    output r1 as cassino_game_test_11.aleo/random_number_generate.future;
 
 finalize random_number_generate:
     input r0 as address.public;
     rand.chacha into r1 as u32;
-    get.or_use random_number_map[r0] 0u32 into r2;
-    set r1 into random_number_map[r0];
+    rem r1 37u32 into r2;
+    set r2 into random_number_map[r0];
 
 
 function make_odd_even_bet_private:
@@ -113,7 +113,7 @@ function make_odd_even_bet_public:
     or r5 r6 into r7;
     assert.eq r7 true;
     async make_odd_even_bet_public r0 r1 r2 r3 self.caller into r8;
-    output r8 as cassino_game_test_13.aleo/make_odd_even_bet_public.future;
+    output r8 as cassino_game_test_11.aleo/make_odd_even_bet_public.future;
 
 finalize make_odd_even_bet_public:
     input r0 as address.public;
@@ -138,3 +138,39 @@ finalize make_odd_even_bet_public:
     set r13 into account[r0];
     ternary r6 r10 r12 into r14;
     ternary r6 r11 r13 into r15;
+
+
+function make_straightup_bet_public:
+    input r0 as address.public;
+    input r1 as u64.public;
+    input r2 as u32.public;
+    input r3 as u32.public;
+    async make_straightup_bet_public r0 r1 r2 r3 self.caller into r4;
+    output r4 as cassino_game_test_11.aleo/make_straightup_bet_public.future;
+
+finalize make_straightup_bet_public:
+    input r0 as address.public;
+    input r1 as u64.public;
+    input r2 as u32.public;
+    input r3 as u32.public;
+    input r4 as address.public;
+    is.eq r3 r2 into r5;
+    set r5 into winner[r4];
+    get.or_use account[r4] 0u64 into r6;
+    get.or_use account[r0] 0u64 into r7;
+    gt r6 r1 into r8;
+    assert.eq r8 true;
+    mul 35u64 r1 into r9;
+    add r6 r9 into r10;
+    mul 35u64 r1 into r11;
+    sub r7 r11 into r12;
+    set r10 into account[r4];
+    set r12 into account[r0];
+    mul 35u64 r1 into r13;
+    sub r6 r13 into r14;
+    mul 35u64 r1 into r15;
+    add r7 r15 into r16;
+    set r14 into account[r4];
+    set r16 into account[r0];
+    ternary r5 r10 r14 into r17;
+    ternary r5 r12 r16 into r18;
