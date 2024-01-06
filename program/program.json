@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
     "program": "cassino_game_test_15.aleo",
+=======
+    "program": "cassino_game_test_11.aleo",
+>>>>>>> main
     "version": "0.0.0",
     "description": "",
     "license": "MIT"
