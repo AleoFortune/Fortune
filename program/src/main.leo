@@ -185,14 +185,13 @@ program cassino_game_test_15.aleo {
 
   transition make_red_black_bet_private(
       casino: WAC,
-      player: WAC,
       bet_amount: u64,
       private bet_on_red: bool,
       private random_number: u32
-  ) -> (WAC, WAC) {
+  ) -> (WAC, bool) { 
       // Game logic
 
-      // Check if the number is red 
+      // Check if the number is red
     let is_red: bool = (random_number == 1u32) || (random_number == 3u32) || (random_number == 5u32) || (random_number == 7u32) || (random_number == 9u32)
         || (random_number == 12u32) || (random_number == 14u32) ||   (random_number == 16u32) || (random_number == 18u32)
         || (random_number == 19u32) || (random_number == 21u32) || (random_number == 23u32) || (random_number == 25u32)
@@ -200,28 +199,24 @@ program cassino_game_test_15.aleo {
 
     // Determine if the player wins
     let win: bool = (bet_on_red && is_red) || (!bet_on_red && !is_red && random_number != 0u32);
-    let player_balance: u64 = player.amount;
+  
     let casino_balance: u64 = casino.amount;
     // Calculate new balances
     if (win) {
-        player_balance += bet_amount;
+     
         casino_balance -= bet_amount;
     } else {
-        player_balance -= bet_amount;
+       
         casino_balance += bet_amount;
     }
     
-    let updated_player_WAC: WAC = WAC {
-        owner: player.owner,
-        amount: player_balance
-            };
-
+ 
     let updated_casino_WAC: WAC = WAC {
         owner: casino.owner,
         amount: casino_balance
             };
     // Return the updated WAC records for the player and casino
-    return (updated_player_WAC, updated_casino_WAC);
+    return (updated_casino_WAC, win);
   }
 
 
