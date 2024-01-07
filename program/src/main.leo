@@ -187,11 +187,81 @@ transition odd_even_private_update_casino(
 
     }
 
+  /* Number Bet */
+
+  // PRIVATE
+
+
+
+  // transition returns updated player record and win/lose bool
+  transition make_straightup_bet_private(
+      player: WAC,
+      bet_amount: u64,
+      private bet: u32,
+      private random_number: u32
+  ) -> (WAC, bool) { 
+     
+      // Game logic
+
+    let win: bool = random_number == bet;
+
+
+
+
+    let player_balance: u64 = player.amount;
+
+    // Calculate new balances
+    if (win) {
+        player_balance += 35u64*bet_amount ;
+    } else {
+        player_balance -= bet_amount;
+    }
+    
+ 
+    let updated_player_WAC: WAC = WAC {
+        owner: player.owner,
+        amount: player_balance
+            };
+    // Return the updated WAC records for the player and casino
+    return (updated_player_WAC, win);
+  }
+
+  //update casino record
+  transition straightup_private_update_casino(
+        casino: WAC,
+        win: bool,
+        bet_amount: u64,
+    ) -> (WAC) { 
+
+      
+      let casino_balance: u64 = casino.amount;  
+      // Calculate new balances
+      if (win) {
+          casino_balance -= 35u64*bet_amount;
+      } else {
+          casino_balance += bet_amount; 
+      }
+      
+  
+      let updated_casino_WAC: WAC = WAC {
+          owner: casino.owner,
+          amount: casino_balance
+              };
+      // Return the updated WAC records for the player and casino
+      return (updated_casino_WAC);
+    }
+
+
+
+
+  // PUBLIC
+
     transition make_straightup_bet_public(
       public casino_owner: address,
       public bet_amount: u64,
       public bet: u32,
-      public random_number: u32,){
+      public random_number: u32
+    ){
 
         return then finalize(casino_owner, bet_amount, bet, random_number, self.caller);
       }
@@ -607,7 +677,7 @@ transition low_high_private_update_casino(
   transition make_column_bet_private(
       player: WAC,
       bet_amount: u64,
-      private bet_column: bool,
+      private bet_column: u32,
       private random_number: u32
   ) -> (WAC, bool) { 
      
