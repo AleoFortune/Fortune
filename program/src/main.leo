@@ -183,8 +183,9 @@ program cassino_game_test_15.aleo {
 
     /* Red-Black Bets */
 
+  // transition returns updated player record and win/lose bool
   transition make_red_black_bet_private(
-      casino: WAC,
+      player: WAC,
       bet_amount: u64,
       private bet_on_red: bool,
       private random_number: u32
@@ -200,13 +201,36 @@ program cassino_game_test_15.aleo {
     // Determine if the player wins
     let win: bool = (bet_on_red && is_red) || (!bet_on_red && !is_red && random_number != 0u32);
   
+    let player_balance: u64 = player.amount;
+    // Calculate new balances
+    if (win) {
+        player_balance += bet_amount;
+    } else {
+        player_balance -= bet_amount;
+    }
+    
+ 
+    let updated_player_WAC: WAC = WAC {
+        owner: player.owner,
+        amount: player_balance
+            };
+    // Return the updated WAC records for the player and casino
+    return (updated_player_WAC, win);
+  }
+
+// 
+transition red_black_update_casino(
+      casino: WAC,
+      win: bool,
+      bet_amount: u64,
+  ) -> (WAC) { 
+
+     
     let casino_balance: u64 = casino.amount;
     // Calculate new balances
     if (win) {
-     
         casino_balance -= bet_amount;
     } else {
-       
         casino_balance += bet_amount;
     }
     
@@ -216,8 +240,10 @@ program cassino_game_test_15.aleo {
         amount: casino_balance
             };
     // Return the updated WAC records for the player and casino
-    return (updated_casino_WAC, win);
+    return (updated_casino_WAC);
   }
+
+
 
 
   transition make_red_black_bet_public(
@@ -232,6 +258,8 @@ program cassino_game_test_15.aleo {
 
     return then finalize(casino_owner, bet_amount, bet_on_red, random_number, self.caller);
 }
+
+
 
 
 // Finalize the red-black bet

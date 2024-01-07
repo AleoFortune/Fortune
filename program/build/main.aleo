@@ -203,12 +203,23 @@ function make_red_black_bet_private:
     is.neq r3 0u32 into r43;
     and r42 r43 into r44;
     or r39 r44 into r45;
-    sub r0.amount r1 into r46;
-    add r0.amount r1 into r47;
+    add r0.amount r1 into r46;
+    sub r0.amount r1 into r47;
     ternary r45 r46 r47 into r48;
     cast r0.owner r48 into r49 as WAC.record;
     output r49 as WAC.record;
     output r45 as boolean.private;
+
+
+function red_black_update_casino:
+    input r0 as WAC.record;
+    input r1 as boolean.private;
+    input r2 as u64.private;
+    sub r0.amount r2 into r3;
+    add r0.amount r2 into r4;
+    ternary r1 r3 r4 into r5;
+    cast r0.owner r5 into r6 as WAC.record;
+    output r6 as WAC.record;
 
 
 function make_red_black_bet_public:
