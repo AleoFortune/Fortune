@@ -71,22 +71,28 @@ function withdraw_private:
 
 function make_odd_even_bet_private:
     input r0 as WAC.record;
-    input r1 as WAC.record;
+    input r1 as u64.private;
+    input r2 as u32.private;
+    input r3 as u32.private;
+    rem r3 2u32 into r4;
+    is.eq r4 r2 into r5;
+    add r0.amount r1 into r6;
+    sub r0.amount r1 into r7;
+    ternary r5 r6 r7 into r8;
+    cast r0.owner r8 into r9 as WAC.record;
+    output r9 as WAC.record;
+    output r5 as boolean.private;
+
+
+function odd_even_private_update_casino:
+    input r0 as WAC.record;
+    input r1 as boolean.private;
     input r2 as u64.private;
-    input r3 as u32.public;
-    input r4 as u32.public;
-    rem r4 2u32 into r5;
-    is.eq r5 r3 into r6;
-    add r1.amount r2 into r7;
-    sub r0.amount r2 into r8;
-    sub r1.amount r2 into r9;
-    add r0.amount r2 into r10;
-    ternary r6 r7 r9 into r11;
-    ternary r6 r8 r10 into r12;
-    cast r1.owner r11 into r13 as WAC.record;
-    cast r0.owner r12 into r14 as WAC.record;
-    output r13 as WAC.record;
-    output r14 as WAC.record;
+    sub r0.amount r2 into r3;
+    add r0.amount r2 into r4;
+    ternary r1 r3 r4 into r5;
+    cast r0.owner r5 into r6 as WAC.record;
+    output r6 as WAC.record;
 
 
 function make_odd_even_bet_public:
@@ -211,7 +217,7 @@ function make_red_black_bet_private:
     output r45 as boolean.private;
 
 
-function red_black_update_casino:
+function red_black_private_update_casino:
     input r0 as WAC.record;
     input r1 as boolean.private;
     input r2 as u64.private;
@@ -295,6 +301,47 @@ finalize make_red_black_bet_public:
     set r55 into account[r0];
 
 
+function make_dozen_bet_private:
+    input r0 as WAC.record;
+    input r1 as u64.private;
+    input r2 as u32.private;
+    input r3 as u32.private;
+    is.eq r2 1u32 into r4;
+    gte r3 1u32 into r5;
+    lte r3 12u32 into r6;
+    and r5 r6 into r7;
+    is.eq r2 2u32 into r8;
+    gte r3 13u32 into r9;
+    lte r3 24u32 into r10;
+    and r9 r10 into r11;
+    is.eq r2 3u32 into r12;
+    gte r3 25u32 into r13;
+    lte r3 36u32 into r14;
+    and r13 r14 into r15;
+    ternary r12 r15 false into r16;
+    ternary r8 r11 r16 into r17;
+    ternary r4 r7 r17 into r18;
+    mul r1 2u64 into r19;
+    add r0.amount r19 into r20;
+    sub r0.amount r1 into r21;
+    ternary r18 r20 r21 into r22;
+    cast r0.owner r22 into r23 as WAC.record;
+    output r23 as WAC.record;
+    output r18 as boolean.private;
+
+
+function dozen_private_update_casino:
+    input r0 as WAC.record;
+    input r1 as boolean.private;
+    input r2 as u64.private;
+    mul r2 2u64 into r3;
+    sub r0.amount r3 into r4;
+    add r0.amount r2 into r5;
+    ternary r1 r4 r5 into r6;
+    cast r0.owner r6 into r7 as WAC.record;
+    output r7 as WAC.record;
+
+
 function make_dozen_bet_public:
     input r0 as address.public;
     input r1 as u64.public;
@@ -345,6 +392,37 @@ finalize make_dozen_bet_public:
     ternary r19 r26 r28 into r30;
     set r29 into account[r4];
     set r30 into account[r0];
+
+
+function make_low_high_bet_private:
+    input r0 as WAC.record;
+    input r1 as u64.private;
+    input r2 as boolean.private;
+    input r3 as u32.private;
+    gte r3 1u32 into r4;
+    lte r3 18u32 into r5;
+    and r4 r5 into r6;
+    gte r3 19u32 into r7;
+    lte r3 36u32 into r8;
+    and r7 r8 into r9;
+    ternary r2 r6 r9 into r10;
+    add r0.amount r1 into r11;
+    sub r0.amount r1 into r12;
+    ternary r10 r11 r12 into r13;
+    cast r0.owner r13 into r14 as WAC.record;
+    output r14 as WAC.record;
+    output r10 as boolean.private;
+
+
+function low_high_private_update_casino:
+    input r0 as WAC.record;
+    input r1 as boolean.private;
+    input r2 as u64.private;
+    sub r0.amount r2 into r3;
+    add r0.amount r2 into r4;
+    ternary r1 r3 r4 into r5;
+    cast r0.owner r5 into r6 as WAC.record;
+    output r6 as WAC.record;
 
 
 function make_low_high_bet_public:

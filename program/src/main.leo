@@ -76,32 +76,74 @@ program cassino_game_test_15.aleo {
  */
 
 
-  transition make_odd_even_bet_private(casino: WAC, player: WAC, bet_amount: u64, public bet: u32, public random_number: u32)->(WAC, WAC) {
-          let win: bool = (random_number % 2u32) == bet;
-          let player_balance: u64 = player.amount;
-          let casino_balance: u64 = casino.amount;
+  /* Odd-Even BET */
+
+  // PRIVATE
 
 
-          if (win) {
-            player_balance += bet_amount;
-            casino_balance -= bet_amount;
-          }
-          else {
-            player_balance -= bet_amount;
-            casino_balance += bet_amount;
-          }
+  // transition returns updated player record and win/lose bool
+  transition make_odd_even_bet_private(
+      player: WAC,
+      bet_amount: u64,
+      private bet: u32,
+      private random_number: u32
+  ) -> (WAC, bool) { 
+     
+      // Game logic
 
-            let updated_player_WAC: WAC = WAC {
-              owner: player.owner,
-              amount: player_balance
+
+    let win: bool = (random_number % 2u32) == bet;
+
+
+
+
+    let player_balance: u64 = player.amount;
+
+    // Calculate new balances
+    if (win) {
+        player_balance += bet_amount;
+    } else {
+        player_balance -= bet_amount;
+    }
+    
+ 
+    let updated_player_WAC: WAC = WAC {
+        owner: player.owner,
+        amount: player_balance
             };
-
-            let updated_casino_WAC: WAC = WAC {
-              owner: casino.owner,
-              amount: casino_balance
-            };
-    return (updated_player_WAC, updated_casino_WAC);
+    // Return the updated WAC records for the player and casino
+    return (updated_player_WAC, win);
   }
+
+//update casino record
+transition odd_even_private_update_casino(
+      casino: WAC,
+      win: bool,
+      bet_amount: u64,
+  ) -> (WAC) { 
+
+     
+    let casino_balance: u64 = casino.amount;
+
+    // Calculate new balances
+    if (win) {
+        casino_balance -= bet_amount;
+    } else {
+        casino_balance += bet_amount; 
+    }
+    
+ 
+    let updated_casino_WAC: WAC = WAC {
+        owner: casino.owner,
+        amount: casino_balance
+            };
+    // Return the updated WAC records for the player and casino
+    return (updated_casino_WAC);
+  }
+
+
+
+  // PUBLIC
 
 
 
@@ -183,7 +225,9 @@ program cassino_game_test_15.aleo {
 
     /* Red-Black Bets */
 
-  // transition returns updated player record and win/lose bool
+    // PRIVATE
+
+  // transition to update and return player record and return win/lose bool
   transition make_red_black_bet_private(
       player: WAC,
       bet_amount: u64,
@@ -218,8 +262,8 @@ program cassino_game_test_15.aleo {
     return (updated_player_WAC, win);
   }
 
-// 
-transition red_black_update_casino(
+// transition to update and return casino record
+transition red_black_private_update_casino(
       casino: WAC,
       win: bool,
       bet_amount: u64,
@@ -244,7 +288,7 @@ transition red_black_update_casino(
   }
 
 
-
+  // PUBLIC
 
   transition make_red_black_bet_public(
     public casino_owner: address,
@@ -299,7 +343,85 @@ finalize make_red_black_bet_public(
 
 
   /* Dozen Bet */
+
+  //(1st 12 - 2nd 12 - 3rd 12)
+
+
+  // PRIVATE
+
+
+
+  // transition returns updated player record and win/lose bool
+  transition make_dozen_bet_private(
+      player: WAC,
+      bet_amount: u64,
+      private bet_dozen: u32,
+      private random_number: u32
+  ) -> (WAC, bool) { 
+     
+      // Game logic
+
+
+    let win: bool = false;
+    if (bet_dozen == 1u32) {
+        win = (random_number >= 1u32 && random_number <= 12u32);
+    } else if (bet_dozen == 2u32) {
+        win = (random_number >= 13u32 && random_number <= 24u32);
+    } else if (bet_dozen == 3u32) {
+        win = (random_number >= 25u32 && random_number <= 36u32);
+    }
+
+
+
+    let player_balance: u64 = player.amount;
+
+    // Calculate new balances
+    if (win) {
+        player_balance += bet_amount * 2u64 ;
+    } else {
+        player_balance -= bet_amount;
+    }
+    
+ 
+    let updated_player_WAC: WAC = WAC {
+        owner: player.owner,
+        amount: player_balance
+            };
+    // Return the updated WAC records for the player and casino
+    return (updated_player_WAC, win);
+  }
+
+// 
+transition dozen_private_update_casino(
+      casino: WAC,
+      win: bool,
+      bet_amount: u64,
+  ) -> (WAC) { 
+
+     
+    let casino_balance: u64 = casino.amount;
+    // Calculate new balances
+    if (win) {
+        casino_balance -= bet_amount * 2u64;
+    } else {
+        casino_balance += bet_amount; 
+    }
+    
+ 
+    let updated_casino_WAC: WAC = WAC {
+        owner: casino.owner,
+        amount: casino_balance
+            };
+    // Return the updated WAC records for the player and casino
+    return (updated_casino_WAC);
+  }
   
+
+
+
+
+  // PUBLIC
+
 // Transition for dozen bet (1st 12 - 2nd 12 - 3rd 12)
 transition make_dozen_bet_public(
     public casino_owner: address,
@@ -355,6 +477,77 @@ transition make_dozen_bet_public(
 
   /* Low-High Bet */
 
+  // PRIVATE
+
+
+  // transition returns updated player record and win/lose bool
+  transition make_low_high_bet_private(
+      player: WAC,
+      bet_amount: u64,
+      private bet_on_low: bool,
+      private random_number: u32
+  ) -> (WAC, bool) { 
+     
+      // Game logic
+
+
+    let win: bool = false;
+    if (bet_on_low) {
+        win = (random_number >= 1u32 && random_number <= 18u32);
+    } else {
+        win = (random_number >= 19u32 && random_number <= 36u32);
+    }
+
+
+
+
+    let player_balance: u64 = player.amount;
+
+    // Calculate new balances
+    if (win) {
+        player_balance += bet_amount;
+    } else {
+        player_balance -= bet_amount;
+    }
+    
+ 
+    let updated_player_WAC: WAC = WAC {
+        owner: player.owner,
+        amount: player_balance
+            };
+    // Return the updated WAC records for the player and casino
+    return (updated_player_WAC, win);
+  }
+
+//update casino record
+transition low_high_private_update_casino(
+      casino: WAC,
+      win: bool,
+      bet_amount: u64,
+  ) -> (WAC) { 
+
+     
+    let casino_balance: u64 = casino.amount;
+    // Calculate new balances
+    if (win) {
+        casino_balance -= bet_amount;
+    } else {
+        casino_balance += bet_amount; 
+    }
+    
+ 
+    let updated_casino_WAC: WAC = WAC {
+        owner: casino.owner,
+        amount: casino_balance
+            };
+    // Return the updated WAC records for the player and casino
+    return (updated_casino_WAC);
+  }
+
+
+
+  // PUBLIC
+
   // Transition for low/high bet
   transition make_low_high_bet_public(
     public casino_owner: address,
@@ -402,4 +595,136 @@ transition make_dozen_bet_public(
     Mapping::set(account, casino_owner, casino_balance);
   }
   
+
+
+
+  /* Column Bet */
+
+    // PRIVATE
+
+
+  // transition returns updated player record and win/lose bool
+  transition make_column_bet_private(
+      player: WAC,
+      bet_amount: u64,
+      private bet_column: bool,
+      private random_number: u32
+  ) -> (WAC, bool) { 
+     
+      // Game logic
+
+
+      let win: bool = false;
+      if (bet_column == 1u32) {
+          win = (random_number % 3u32 == 1u32);
+      } else if (bet_column == 2u32) {
+          win = (random_number % 3u32 == 2u32);
+      } else if (bet_column == 3u32) {
+          win = (random_number % 3u32 == 0u32 && random_number != 0u32);
+      }
+
+
+
+    let player_balance: u64 = player.amount;
+
+    // Calculate new balances
+    if (win) {
+        player_balance += bet_amount * 2u64;
+    } else {
+        player_balance -= bet_amount;
+    }
+    
+ 
+    let updated_player_WAC: WAC = WAC {
+        owner: player.owner,
+        amount: player_balance
+            };
+    // Return the updated WAC records for the player and casino
+    return (updated_player_WAC, win);
+  }
+
+//update casino record
+transition column_private_update_casino(
+      casino: WAC,
+      win: bool,
+      bet_amount: u64,
+  ) -> (WAC) { 
+
+     
+    let casino_balance: u64 = casino.amount;
+    // Calculate new balances
+    if (win) {
+        casino_balance -= bet_amount * 2u64;
+    } else {
+        casino_balance += bet_amount; 
+    }
+    
+ 
+    let updated_casino_WAC: WAC = WAC {
+        owner: casino.owner,
+        amount: casino_balance
+            };
+    // Return the updated WAC records for the player and casino
+    return (updated_casino_WAC);
+  }
+
+
+
+
+  //PUBLIC
+
+
+  // Transition for column bet
+  transition make_column_bet_public(
+      public casino_owner: address,
+      public bet_amount: u64,
+      public bet_column: u32,
+      public random_number: u32,
+
+  ){
+      assert(bet_amount > 0u64);
+      assert(bet_column >= 1u32 && bet_column <= 3u32);
+
+      return then finalize(casino_owner, bet_amount, bet_column, random_number, self.caller);
+  }
+
+  // Finalize the column bet
+  finalize make_column_bet_public(
+      public casino_owner: address,
+      public bet_amount: u64,
+      public bet_column: u32,
+      public random_number: u32,
+      public player: address
+  ){
+
+
+      let win: bool = false;
+      if (bet_column == 1u32) {
+          win = (random_number % 3u32 == 1u32);
+      } else if (bet_column == 2u32) {
+          win = (random_number % 3u32 == 2u32);
+      } else if (bet_column == 3u32) {
+          win = (random_number % 3u32 == 0u32 && random_number != 0u32);
+      }
+
+      Mapping::set(winner, player, win);
+
+      let current_player_amount: u64 = Mapping::get_or_use(account, player, 0u64);
+      let casino_balance: u64 = Mapping::get_or_use(account, casino_owner, 0u64);
+
+      assert(current_player_amount >= bet_amount);
+
+      if (win) {
+          current_player_amount += bet_amount * 2u64; // Double the bet amount as reward
+          casino_balance -= bet_amount * 2u64;
+      } else {
+          current_player_amount -= bet_amount;
+          casino_balance += bet_amount;
+      }
+
+      Mapping::set(account, player, current_player_amount);
+      Mapping::set(account, casino_owner, casino_balance);
+  }
+
+
 }
