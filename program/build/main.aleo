@@ -147,7 +147,7 @@ function make_straightup_bet_private:
     output r4 as boolean.private;
 
 
-function straightup_private_update_casino:
+function straightup_update_casino:
     input r0 as WAC.record;
     input r1 as boolean.private;
     input r2 as u64.private;

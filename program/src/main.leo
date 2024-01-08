@@ -226,30 +226,33 @@ transition odd_even_private_update_casino(
     return (updated_player_WAC, win);
   }
 
-  //update casino record
-  transition straightup_private_update_casino(
-        casino: WAC,
-        win: bool,
-        bet_amount: u64,
-    ) -> (WAC) { 
 
-      
-      let casino_balance: u64 = casino.amount;  
-      // Calculate new balances
-      if (win) {
-          casino_balance -= 35u64*bet_amount;
-      } else {
-          casino_balance += bet_amount; 
-      }
-      
-  
-      let updated_casino_WAC: WAC = WAC {
-          owner: casino.owner,
-          amount: casino_balance
-              };
-      // Return the updated WAC records for the player and casino
-      return (updated_casino_WAC);
+    //update casino record
+  transition straightup_update_casino(
+      casino: WAC,
+      win: bool,
+      bet_amount: u64,
+  ) -> (WAC) { 
+
+     
+    let casino_balance: u64 = casino.amount;
+
+    // Calculate new balances
+    if (win) {
+        casino_balance -= 35u64*bet_amount;
+    } else {
+        casino_balance += bet_amount; 
     }
+    
+ 
+    let updated_casino_WAC: WAC = WAC {
+        owner: casino.owner,
+        amount: casino_balance
+            };
+    // Return the updated WAC records for the player and casino
+    return (updated_casino_WAC);
+  }
+
 
 
 
@@ -795,6 +798,7 @@ transition column_private_update_casino(
       Mapping::set(account, player, current_player_amount);
       Mapping::set(account, casino_owner, casino_balance);
   }
+
 
 
 }
