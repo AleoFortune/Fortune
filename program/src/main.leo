@@ -1,5 +1,5 @@
 // The 'roulette' program.
-program cassino_game_test_40.aleo {
+program cassino_game_test_ekim.aleo {
 
     mapping account: address => u64;
     mapping random_number_map: address=>u32;

@@ -1,4 +1,4 @@
-program cassino_game_test_40.aleo;
+program cassino_game_test_ekim.aleo;
 
 record WAC:
     owner as address.private;
@@ -23,7 +23,7 @@ function deposit_public:
     input r0 as address.public;
     input r1 as u64.public;
     async deposit_public r0 r1 into r2;
-    output r2 as cassino_game_test_40.aleo/deposit_public.future;
+    output r2 as cassino_game_test_ekim.aleo/deposit_public.future;
 
 finalize deposit_public:
     input r0 as address.public;
@@ -44,7 +44,7 @@ function withdraw_public:
     input r0 as address.public;
     input r1 as u64.public;
     async withdraw_public self.caller r0 r1 into r2;
-    output r2 as cassino_game_test_40.aleo/withdraw_public.future;
+    output r2 as cassino_game_test_ekim.aleo/withdraw_public.future;
 
 finalize withdraw_public:
     input r0 as address.public;
@@ -72,7 +72,7 @@ function withdraw_private:
 function random_number_generate:
     input r0 as address.public;
     async random_number_generate self.caller into r1;
-    output r1 as cassino_game_test_40.aleo/random_number_generate.future;
+    output r1 as cassino_game_test_ekim.aleo/random_number_generate.future;
 
 finalize random_number_generate:
     input r0 as address.public;
@@ -113,7 +113,7 @@ function make_odd_even_bet_public:
     or r5 r6 into r7;
     assert.eq r7 true;
     async make_odd_even_bet_public r0 r1 r2 r3 self.caller into r8;
-    output r8 as cassino_game_test_40.aleo/make_odd_even_bet_public.future;
+    output r8 as cassino_game_test_ekim.aleo/make_odd_even_bet_public.future;
 
 finalize make_odd_even_bet_public:
     input r0 as address.public;
@@ -144,7 +144,7 @@ function make_straightup_bet_public:
     input r2 as u32.public;
     input r3 as u32.public;
     async make_straightup_bet_public r0 r1 r2 r3 self.caller into r4;
-    output r4 as cassino_game_test_40.aleo/make_straightup_bet_public.future;
+    output r4 as cassino_game_test_ekim.aleo/make_straightup_bet_public.future;
 
 finalize make_straightup_bet_public:
     input r0 as address.public;
@@ -176,7 +176,7 @@ function make_red_black_bet_public:
     gt r1 0u64 into r4;
     assert.eq r4 true;
     async make_red_black_bet_public r0 r1 r2 r3 self.caller into r5;
-    output r5 as cassino_game_test_40.aleo/make_red_black_bet_public.future;
+    output r5 as cassino_game_test_ekim.aleo/make_red_black_bet_public.future;
 
 finalize make_red_black_bet_public:
     input r0 as address.public;
@@ -253,7 +253,7 @@ function make_dozen_bet_public:
     and r5 r6 into r7;
     assert.eq r7 true;
     async make_dozen_bet_public r0 r1 r2 r3 self.caller into r8;
-    output r8 as cassino_game_test_40.aleo/make_dozen_bet_public.future;
+    output r8 as cassino_game_test_ekim.aleo/make_dozen_bet_public.future;
 
 finalize make_dozen_bet_public:
     input r0 as address.public;
@@ -301,7 +301,7 @@ function make_low_high_bet_public:
     gt r1 0u64 into r4;
     assert.eq r4 true;
     async make_low_high_bet_public r0 r1 r2 r3 self.caller into r5;
-    output r5 as cassino_game_test_40.aleo/make_low_high_bet_public.future;
+    output r5 as cassino_game_test_ekim.aleo/make_low_high_bet_public.future;
 
 finalize make_low_high_bet_public:
     input r0 as address.public;
