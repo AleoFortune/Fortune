@@ -5,7 +5,7 @@ import TheirTurn from '@components/TheirTurn';
 import YourTurn from '@components/YourTurn';
 import { useGameStore } from '@state/gameStore';
 import { useNewGameStore } from './NewGame/store';
-import { requestCreateEvent,getEvent ,useAccount, GetEventResponse} from '@puzzlehq/sdk';
+import { requestCreateEvent,getEvent ,useAccount, GetEventResponse, getEvents,GetEventsResponse, EventsFilter} from '@puzzlehq/sdk';
 import { EventType } from '@puzzlehq/types';
 import { useState } from 'react';
 
@@ -25,9 +25,9 @@ const testEvent = async () => {
 
 const createEventResponse = await requestCreateEvent({
   type: EventType.Execute,
-  programId:"cassino_game_test_30.aleo",
+  programId:"cassino_game_test_ekim.aleo",
   functionId:"random_number_generate",
-  fee:5,
+  fee:2,
   inputs:Object.values(record1),
   
 })
@@ -42,19 +42,34 @@ if(createEventResponse.error){
 const getEventResponseTest = async () => {
   try {
     const response: GetEventResponse = await getEvent({
-      id: "659ab230c918ed9ed0d45aae",
+      id: "659e3ec8ce397a383701b4ae",
       address: "aleo19jp6rwmzq4m2nj32h8fmtecl4hyclajxnzx4plksgsp3qtcsaygqdk68dr"
     });
-    alert(JSON.stringify(response.event!.status));
+    alert(JSON.stringify(response.event!));
   } catch (e) {
     alert((e as Error).message);
   } finally {
-    console.log("bitti")
   }
   
 }
 
+const getAllEvents = async( ) => {
+const filter: EventsFilter  = {
+  type: EventType.Execute,
+  programId:"cassino_game_test_ekim.aleo",
+  functionId:"random_number_generate",
+}
 
+
+try {
+  const events:GetEventsResponse = await getEvents(filter)
+
+  console.log(events)
+} catch (error) {
+  
+}
+
+}
 
 
   return (
@@ -74,6 +89,8 @@ const getEventResponseTest = async () => {
         </Button>
         <Button color='green' onClick={()=>testEvent()}>TEST </Button>
         <Button color='green' onClick={()=>getEventResponseTest()}>get event </Button>
+        <Button color='green' onClick={()=>getAllEvents()}>get all events </Button>
+
 
         {yourTurn.length > 0 && <YourTurn games={yourTurn} />}
         {theirTurn.length > 0 && <TheirTurn games={theirTurn} />}

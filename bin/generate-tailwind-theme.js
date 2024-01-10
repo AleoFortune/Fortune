@@ -5,7 +5,6 @@ import path from 'path';
 import tailwindConfig from '../tailwind.config.cjs';
 
 const { theme } = resolveConfig(tailwindConfig);
-console.log(theme.colors);
 const themeStr = JSON.stringify(theme.colors);
 const js = `
 export const theme  = {

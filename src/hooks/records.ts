@@ -22,7 +22,7 @@ export const useGameRecords = () => {
     (record) => record.programId === 'multiparty_pvp_utils_v015.aleo'
   );
 
-  console.log([gameNotifications, puzzleRecords, utilRecords]);
+  // console.log([gameNotifications, puzzleRecords, utilRecords]);
 
   return { puzzleRecords, gameNotifications, utilRecords };
 };
