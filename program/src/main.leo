@@ -1,4 +1,4 @@
-program fortune_newlogic.aleo {
+program fortune_newlogic_1.aleo {
 
     /* test inputs
 
@@ -6,7 +6,6 @@ program fortune_newlogic.aleo {
     [1u32, 2u32, 3u32, 4u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32]
     
     */
-
 
    // Mappings
    mapping account: address => u64;
@@ -36,11 +35,17 @@ program fortune_newlogic.aleo {
    transition place_bet_public(
        public bet_amount: u64,
        public choice: [u32; 32], // Array of chosen numbers (e.g., [0, 2, 4, ..., 36] for even)
-       public multiplier: u64
    ) {  
+        let counter:u64 = 0u64;
+        for i: u32 in 0u32..32u32 {
+           let d: u32 = choice[i];
+           if (d != 40u32) {
+               counter += 1u64;
+           }
+       }
 
        // Calculate the result
-       return then finalize(casino_address, self.caller, bet_amount, choice, multiplier);
+       return then finalize(casino_address, self.caller, bet_amount, choice, counter);
    }
 
 
@@ -50,13 +55,11 @@ program fortune_newlogic.aleo {
        public player: address,
        public bet_amount: u64,
        public choice: [u32; 32],
-       public multiplier: u64,
+       public counter: u64,
    ) {
 
 
        Mapping::set(choice_map, player, choice);
-
-
        let random_number: u32 = ChaCha::rand_u32();
        let random_number_mod37: u32 = random_number % 37u32; // 0 to 36     
        Mapping::set(random_number_map, player, random_number_mod37);
@@ -80,20 +83,15 @@ program fortune_newlogic.aleo {
 
 
 
-        
+       let multiplier: u64 = 36u64/counter;
        let payout: u64 = bet_amount * (multiplier-1u64);
 
 
        let current_player_amount: u64 = Mapping::get_or_use(account, player, 0u64);
        let current_casino_balance: u64 = Mapping::get_or_use(account, casino_owner, 0u64);
 
-
-
-
        assert(current_player_amount > bet_amount);
-
-
-
+       assert(current_casino_balance > payout);
 
        if (win) {
            current_player_amount += payout;

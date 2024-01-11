@@ -1,4 +1,4 @@
-program fortune_newlogic.aleo;
+program fortune_newlogic_2.aleo;
 
 record WAC:
     owner as address.private;
@@ -6,6 +6,11 @@ record WAC:
 
 
 mapping account:
+	key as address.public;
+	value as u64.public;
+
+
+mapping mul:
 	key as address.public;
 	value as u64.public;
 
@@ -23,7 +28,7 @@ function deposit_public:
     input r0 as address.public;
     input r1 as u64.public;
     async deposit_public r0 r1 into r2;
-    output r2 as fortune_newlogic.aleo/deposit_public.future;
+    output r2 as fortune_newlogic_2.aleo/deposit_public.future;
 
 finalize deposit_public:
     input r0 as address.public;
@@ -36,9 +41,104 @@ finalize deposit_public:
 function place_bet_public:
     input r0 as u64.public;
     input r1 as [u32; 32u32].public;
-    input r2 as u64.public;
-    async place_bet_public aleo1l8lyps4rm43lklhnt0yaupvtz758d3dx2wzfr6uqwwg4tk4lev9qvguw09 self.caller r0 r1 r2 into r3;
-    output r3 as fortune_newlogic.aleo/place_bet_public.future;
+    is.neq r1[0u32] 40u32 into r2;
+    add 0u64 1u64 into r3;
+    ternary r2 r3 0u64 into r4;
+    is.neq r1[1u32] 40u32 into r5;
+    add r4 1u64 into r6;
+    ternary r5 r6 r4 into r7;
+    is.neq r1[2u32] 40u32 into r8;
+    add r7 1u64 into r9;
+    ternary r8 r9 r7 into r10;
+    is.neq r1[3u32] 40u32 into r11;
+    add r10 1u64 into r12;
+    ternary r11 r12 r10 into r13;
+    is.neq r1[4u32] 40u32 into r14;
+    add r13 1u64 into r15;
+    ternary r14 r15 r13 into r16;
+    is.neq r1[5u32] 40u32 into r17;
+    add r16 1u64 into r18;
+    ternary r17 r18 r16 into r19;
+    is.neq r1[6u32] 40u32 into r20;
+    add r19 1u64 into r21;
+    ternary r20 r21 r19 into r22;
+    is.neq r1[7u32] 40u32 into r23;
+    add r22 1u64 into r24;
+    ternary r23 r24 r22 into r25;
+    is.neq r1[8u32] 40u32 into r26;
+    add r25 1u64 into r27;
+    ternary r26 r27 r25 into r28;
+    is.neq r1[9u32] 40u32 into r29;
+    add r28 1u64 into r30;
+    ternary r29 r30 r28 into r31;
+    is.neq r1[10u32] 40u32 into r32;
+    add r31 1u64 into r33;
+    ternary r32 r33 r31 into r34;
+    is.neq r1[11u32] 40u32 into r35;
+    add r34 1u64 into r36;
+    ternary r35 r36 r34 into r37;
+    is.neq r1[12u32] 40u32 into r38;
+    add r37 1u64 into r39;
+    ternary r38 r39 r37 into r40;
+    is.neq r1[13u32] 40u32 into r41;
+    add r40 1u64 into r42;
+    ternary r41 r42 r40 into r43;
+    is.neq r1[14u32] 40u32 into r44;
+    add r43 1u64 into r45;
+    ternary r44 r45 r43 into r46;
+    is.neq r1[15u32] 40u32 into r47;
+    add r46 1u64 into r48;
+    ternary r47 r48 r46 into r49;
+    is.neq r1[16u32] 40u32 into r50;
+    add r49 1u64 into r51;
+    ternary r50 r51 r49 into r52;
+    is.neq r1[17u32] 40u32 into r53;
+    add r52 1u64 into r54;
+    ternary r53 r54 r52 into r55;
+    is.neq r1[18u32] 40u32 into r56;
+    add r55 1u64 into r57;
+    ternary r56 r57 r55 into r58;
+    is.neq r1[19u32] 40u32 into r59;
+    add r58 1u64 into r60;
+    ternary r59 r60 r58 into r61;
+    is.neq r1[20u32] 40u32 into r62;
+    add r61 1u64 into r63;
+    ternary r62 r63 r61 into r64;
+    is.neq r1[21u32] 40u32 into r65;
+    add r64 1u64 into r66;
+    ternary r65 r66 r64 into r67;
+    is.neq r1[22u32] 40u32 into r68;
+    add r67 1u64 into r69;
+    ternary r68 r69 r67 into r70;
+    is.neq r1[23u32] 40u32 into r71;
+    add r70 1u64 into r72;
+    ternary r71 r72 r70 into r73;
+    is.neq r1[24u32] 40u32 into r74;
+    add r73 1u64 into r75;
+    ternary r74 r75 r73 into r76;
+    is.neq r1[25u32] 40u32 into r77;
+    add r76 1u64 into r78;
+    ternary r77 r78 r76 into r79;
+    is.neq r1[26u32] 40u32 into r80;
+    add r79 1u64 into r81;
+    ternary r80 r81 r79 into r82;
+    is.neq r1[27u32] 40u32 into r83;
+    add r82 1u64 into r84;
+    ternary r83 r84 r82 into r85;
+    is.neq r1[28u32] 40u32 into r86;
+    add r85 1u64 into r87;
+    ternary r86 r87 r85 into r88;
+    is.neq r1[29u32] 40u32 into r89;
+    add r88 1u64 into r90;
+    ternary r89 r90 r88 into r91;
+    is.neq r1[30u32] 40u32 into r92;
+    add r91 1u64 into r93;
+    ternary r92 r93 r91 into r94;
+    is.neq r1[31u32] 40u32 into r95;
+    add r94 1u64 into r96;
+    ternary r95 r96 r94 into r97;
+    async place_bet_public aleo1l8lyps4rm43lklhnt0yaupvtz758d3dx2wzfr6uqwwg4tk4lev9qvguw09 self.caller r0 r1 r97 into r98;
+    output r98 as fortune_newlogic_2.aleo/place_bet_public.future;
 
 finalize place_bet_public:
     input r0 as address.public;
@@ -178,16 +278,21 @@ finalize place_bet_public:
     is.eq r6 r3[31u32] into r132;
     and r131 r132 into r133;
     ternary r133 true r130 into r134;
-    mul r2 r4 into r135;
-    get.or_use account[r1] 0u64 into r136;
-    get.or_use account[r0] 0u64 into r137;
-    gt r136 r2 into r138;
-    assert.eq r138 true;
-    add r136 r135 into r139;
-    sub r137 r135 into r140;
-    sub r136 r2 into r141;
-    add r137 r2 into r142;
-    ternary r134 r139 r141 into r143;
-    ternary r134 r140 r142 into r144;
-    set r143 into account[r1];
-    set r144 into account[r0];
+    div.w 36u64 r4 into r135;
+    set r135 into mul[r1];
+    sub r135 1u64 into r136;
+    mul r2 r136 into r137;
+    get.or_use account[r1] 0u64 into r138;
+    get.or_use account[r0] 0u64 into r139;
+    gt r138 r2 into r140;
+    assert.eq r140 true;
+    gt r139 r137 into r141;
+    assert.eq r141 true;
+    add r138 r137 into r142;
+    sub r139 r137 into r143;
+    sub r138 r2 into r144;
+    add r139 r2 into r145;
+    ternary r134 r142 r144 into r146;
+    ternary r134 r143 r145 into r147;
+    set r146 into account[r1];
+    set r147 into account[r0];
