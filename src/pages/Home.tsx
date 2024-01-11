@@ -22,28 +22,22 @@ function Home() {
   const { account } = useAccount();
   const record1 = {bet_amount:'20u64', bet:'2u32'};
   const navigate = useNavigate();
+  const input = {reciever:'aleo1696yxs062yrm0nmvflwcp7zjy0l8l4w8gpr3wn0ql3nttu54ayqsuxqus5', amount: '10u64'}
 
 const testGetAccount = async () => {
   console.log(account?.address);
 }
 
-const testGetMap = async () => {
-  // Define the URL of the endpoint
+
+
+const testGetMapBalance = async () => {
   const url = `https://api.explorer.aleo.org/v1/testnet3/program/cassino_game_test_fp.aleo/mapping/account/${account?.address}`;
-  
-
   try {
-      // Use the fetch API to send a GET request
       const response = await fetch(url);
-
-      // Check if the response is ok (status in the range 200-299)
       if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
       }
-
-      // Process the JSON data
       const data = await response.json();
-
       console.log(data); // Log or process the data as needed
   } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
@@ -68,6 +62,25 @@ if(createEventResponse.error){
 }
 
 }
+
+
+const testTransferPublic = async () => {
+
+  const createEventResponse = await requestCreateEvent({
+    type: EventType.Execute,
+    programId:"credits.aleo",
+    functionId:"transfer_public",
+    fee:3,
+    inputs:Object.values(input),
+    
+  })
+  if(createEventResponse.error){
+    alert(createEventResponse.error)
+  }else {
+    alert(createEventResponse.eventId)
+  }
+  
+  }
 
 const getEventResponseTest = async () => {
   try {
@@ -120,7 +133,9 @@ const filter: EventsFilter  = {
         <Button color='green' onClick={()=>testGetAccount()}>TEST Account </Button>
         <Button color='green' onClick={()=>testEvent()}>TEST Event </Button>
         <Button color='green' onClick={()=>getEventResponseTest()}>get event </Button>
-        <Button color='green' onClick={()=>testGetMap()}>get key from map </Button>
+        <Button color='green' onClick={()=>testGetMapBalance()}>get key from map </Button>
+        <Button color='green' onClick={()=>testTransferPublic()}>transfer public </Button>
+
 
 
         {yourTurn.length > 0 && <YourTurn games={yourTurn} />}
