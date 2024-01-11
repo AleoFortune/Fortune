@@ -1,4 +1,4 @@
-program cassino_game_test_15.aleo;
+program fortune_newlogic.aleo;
 
 record WAC:
     owner as address.private;
@@ -15,15 +15,15 @@ mapping random_number_map:
 	value as u32.public;
 
 
-mapping winner:
+mapping choice_map:
 	key as address.public;
-	value as boolean.public;
+	value as [u32; 32u32].public;
 
 function deposit_public:
     input r0 as address.public;
     input r1 as u64.public;
     async deposit_public r0 r1 into r2;
-    output r2 as cassino_game_test_15.aleo/deposit_public.future;
+    output r2 as fortune_newlogic.aleo/deposit_public.future;
 
 finalize deposit_public:
     input r0 as address.public;
@@ -33,549 +33,161 @@ finalize deposit_public:
     set r3 into account[r0];
 
 
-function deposit_private:
-    input r0 as address.private;
-    input r1 as u64.private;
-    cast r0 r1 into r2 as WAC.record;
-    output r2 as WAC.record;
+function place_bet_public:
+    input r0 as u64.public;
+    input r1 as [u32; 32u32].public;
+    input r2 as u64.public;
+    async place_bet_public aleo1l8lyps4rm43lklhnt0yaupvtz758d3dx2wzfr6uqwwg4tk4lev9qvguw09 self.caller r0 r1 r2 into r3;
+    output r3 as fortune_newlogic.aleo/place_bet_public.future;
 
-
-function withdraw_public:
-    input r0 as address.public;
-    input r1 as u64.public;
-    async withdraw_public self.caller r0 r1 into r2;
-    output r2 as cassino_game_test_15.aleo/withdraw_public.future;
-
-finalize withdraw_public:
+finalize place_bet_public:
     input r0 as address.public;
     input r1 as address.public;
     input r2 as u64.public;
-    get.or_use account[r0] 0u64 into r3;
-    sub r3 r2 into r4;
-    set r4 into account[r0];
-    get.or_use account[r1] 0u64 into r5;
-    add r5 r2 into r6;
-    set r6 into account[r1];
-
-
-function withdraw_private:
-    input r0 as WAC.record;
-    input r1 as address.private;
-    input r2 as u64.private;
-    sub r0.amount r2 into r3;
-    cast r0.owner r3 into r4 as WAC.record;
-    cast r1 r2 into r5 as WAC.record;
-    output r4 as WAC.record;
-    output r5 as WAC.record;
-
-
-function make_odd_even_bet_private:
-    input r0 as WAC.record;
-    input r1 as u64.private;
-    input r2 as u32.private;
-    input r3 as u32.private;
-    rem r3 2u32 into r4;
-    is.eq r4 r2 into r5;
-    add r0.amount r1 into r6;
-    sub r0.amount r1 into r7;
-    ternary r5 r6 r7 into r8;
-    cast r0.owner r8 into r9 as WAC.record;
-    output r9 as WAC.record;
-    output r5 as boolean.private;
-
-
-function odd_even_private_update_casino:
-    input r0 as WAC.record;
-    input r1 as boolean.private;
-    input r2 as u64.private;
-    sub r0.amount r2 into r3;
-    add r0.amount r2 into r4;
-    ternary r1 r3 r4 into r5;
-    cast r0.owner r5 into r6 as WAC.record;
-    output r6 as WAC.record;
-
-
-function make_odd_even_bet_public:
-    input r0 as address.public;
-    input r1 as u64.public;
-    input r2 as u32.public;
-    input r3 as u32.public;
-    gt r1 0u64 into r4;
-    assert.eq r4 true;
-    is.eq r2 0u32 into r5;
-    is.eq r2 1u32 into r6;
-    or r5 r6 into r7;
-    assert.eq r7 true;
-    async make_odd_even_bet_public r0 r1 r2 r3 self.caller into r8;
-    output r8 as cassino_game_test_15.aleo/make_odd_even_bet_public.future;
-
-finalize make_odd_even_bet_public:
-    input r0 as address.public;
-    input r1 as u64.public;
-    input r2 as u32.public;
-    input r3 as u32.public;
-    input r4 as address.public;
-    rem r3 2u32 into r5;
-    is.eq r5 r2 into r6;
-    set r6 into winner[r4];
-    get.or_use account[r4] 0u64 into r7;
-    get.or_use account[r0] 0u64 into r8;
-    gt r7 r1 into r9;
-    assert.eq r9 true;
-    add r7 r1 into r10;
-    sub r8 r1 into r11;
-    sub r7 r1 into r12;
-    add r8 r1 into r13;
-    ternary r6 r10 r12 into r14;
-    ternary r6 r11 r13 into r15;
-    set r14 into account[r4];
-    set r15 into account[r0];
-
-
-function make_straightup_bet_private:
-    input r0 as WAC.record;
-    input r1 as u64.private;
-    input r2 as u32.private;
-    input r3 as u32.private;
-    is.eq r3 r2 into r4;
-    mul 35u64 r1 into r5;
-    add r0.amount r5 into r6;
-    sub r0.amount r1 into r7;
-    ternary r4 r6 r7 into r8;
-    cast r0.owner r8 into r9 as WAC.record;
-    output r9 as WAC.record;
-    output r4 as boolean.private;
-
-
-function straightup_update_casino:
-    input r0 as WAC.record;
-    input r1 as boolean.private;
-    input r2 as u64.private;
-    mul 35u64 r2 into r3;
-    sub r0.amount r3 into r4;
-    add r0.amount r2 into r5;
-    ternary r1 r4 r5 into r6;
-    cast r0.owner r6 into r7 as WAC.record;
-    output r7 as WAC.record;
-
-
-function make_straightup_bet_public:
-    input r0 as address.public;
-    input r1 as u64.public;
-    input r2 as u32.public;
-    input r3 as u32.public;
-    async make_straightup_bet_public r0 r1 r2 r3 self.caller into r4;
-    output r4 as cassino_game_test_15.aleo/make_straightup_bet_public.future;
-
-finalize make_straightup_bet_public:
-    input r0 as address.public;
-    input r1 as u64.public;
-    input r2 as u32.public;
-    input r3 as u32.public;
-    input r4 as address.public;
-    is.eq r3 r2 into r5;
-    set r5 into winner[r4];
-    get.or_use account[r4] 0u64 into r6;
-    get.or_use account[r0] 0u64 into r7;
-    mul 35u64 r1 into r8;
-    add r6 r8 into r9;
-    mul 35u64 r1 into r10;
-    sub r7 r10 into r11;
-    sub r6 r1 into r12;
-    add r7 r1 into r13;
-    ternary r5 r9 r12 into r14;
-    ternary r5 r11 r13 into r15;
-    set r14 into account[r4];
-    set r15 into account[r0];
-
-
-function make_red_black_bet_private:
-    input r0 as WAC.record;
-    input r1 as u64.private;
-    input r2 as boolean.private;
-    input r3 as u32.private;
-    is.eq r3 1u32 into r4;
-    is.eq r3 3u32 into r5;
-    or r4 r5 into r6;
-    is.eq r3 5u32 into r7;
-    or r6 r7 into r8;
-    is.eq r3 7u32 into r9;
-    or r8 r9 into r10;
-    is.eq r3 9u32 into r11;
-    or r10 r11 into r12;
-    is.eq r3 12u32 into r13;
-    or r12 r13 into r14;
-    is.eq r3 14u32 into r15;
-    or r14 r15 into r16;
-    is.eq r3 16u32 into r17;
-    or r16 r17 into r18;
-    is.eq r3 18u32 into r19;
-    or r18 r19 into r20;
-    is.eq r3 19u32 into r21;
-    or r20 r21 into r22;
-    is.eq r3 21u32 into r23;
-    or r22 r23 into r24;
-    is.eq r3 23u32 into r25;
-    or r24 r25 into r26;
-    is.eq r3 25u32 into r27;
-    or r26 r27 into r28;
-    is.eq r3 27u32 into r29;
-    or r28 r29 into r30;
-    is.eq r3 30u32 into r31;
-    or r30 r31 into r32;
-    is.eq r3 32u32 into r33;
-    or r32 r33 into r34;
-    is.eq r3 34u32 into r35;
-    or r34 r35 into r36;
-    is.eq r3 36u32 into r37;
-    or r36 r37 into r38;
-    and r2 r38 into r39;
-    not r2 into r40;
-    not r38 into r41;
-    and r40 r41 into r42;
-    is.neq r3 0u32 into r43;
-    and r42 r43 into r44;
-    or r39 r44 into r45;
-    add r0.amount r1 into r46;
-    sub r0.amount r1 into r47;
-    ternary r45 r46 r47 into r48;
-    cast r0.owner r48 into r49 as WAC.record;
-    output r49 as WAC.record;
-    output r45 as boolean.private;
-
-
-function red_black_private_update_casino:
-    input r0 as WAC.record;
-    input r1 as boolean.private;
-    input r2 as u64.private;
-    sub r0.amount r2 into r3;
-    add r0.amount r2 into r4;
-    ternary r1 r3 r4 into r5;
-    cast r0.owner r5 into r6 as WAC.record;
-    output r6 as WAC.record;
-
-
-function make_red_black_bet_public:
-    input r0 as address.public;
-    input r1 as u64.public;
-    input r2 as boolean.public;
-    input r3 as u32.public;
-    gt r1 0u64 into r4;
-    assert.eq r4 true;
-    async make_red_black_bet_public r0 r1 r2 r3 self.caller into r5;
-    output r5 as cassino_game_test_15.aleo/make_red_black_bet_public.future;
-
-finalize make_red_black_bet_public:
-    input r0 as address.public;
-    input r1 as u64.public;
-    input r2 as boolean.public;
-    input r3 as u32.public;
-    input r4 as address.public;
-    is.eq r3 1u32 into r5;
-    is.eq r3 3u32 into r6;
-    or r5 r6 into r7;
-    is.eq r3 5u32 into r8;
-    or r7 r8 into r9;
-    is.eq r3 7u32 into r10;
-    or r9 r10 into r11;
-    is.eq r3 9u32 into r12;
-    or r11 r12 into r13;
-    is.eq r3 12u32 into r14;
-    or r13 r14 into r15;
-    is.eq r3 14u32 into r16;
-    or r15 r16 into r17;
-    is.eq r3 16u32 into r18;
-    or r17 r18 into r19;
-    is.eq r3 18u32 into r20;
-    or r19 r20 into r21;
-    is.eq r3 19u32 into r22;
-    or r21 r22 into r23;
-    is.eq r3 21u32 into r24;
-    or r23 r24 into r25;
-    is.eq r3 23u32 into r26;
-    or r25 r26 into r27;
-    is.eq r3 25u32 into r28;
-    or r27 r28 into r29;
-    is.eq r3 27u32 into r30;
-    or r29 r30 into r31;
-    is.eq r3 30u32 into r32;
-    or r31 r32 into r33;
-    is.eq r3 32u32 into r34;
-    or r33 r34 into r35;
-    is.eq r3 34u32 into r36;
-    or r35 r36 into r37;
-    is.eq r3 36u32 into r38;
-    or r37 r38 into r39;
-    and r2 r39 into r40;
-    not r2 into r41;
-    not r39 into r42;
-    and r41 r42 into r43;
-    is.neq r3 0u32 into r44;
-    and r43 r44 into r45;
-    or r40 r45 into r46;
-    set r46 into winner[r4];
-    get.or_use account[r4] 0u64 into r47;
-    get.or_use account[r0] 0u64 into r48;
-    gte r47 r1 into r49;
-    assert.eq r49 true;
-    add r47 r1 into r50;
-    sub r48 r1 into r51;
-    sub r47 r1 into r52;
-    add r48 r1 into r53;
-    ternary r46 r50 r52 into r54;
-    ternary r46 r51 r53 into r55;
-    set r54 into account[r4];
-    set r55 into account[r0];
-
-
-function make_dozen_bet_private:
-    input r0 as WAC.record;
-    input r1 as u64.private;
-    input r2 as u32.private;
-    input r3 as u32.private;
-    is.eq r2 1u32 into r4;
-    gte r3 1u32 into r5;
-    lte r3 12u32 into r6;
-    and r5 r6 into r7;
-    is.eq r2 2u32 into r8;
-    gte r3 13u32 into r9;
-    lte r3 24u32 into r10;
-    and r9 r10 into r11;
-    is.eq r2 3u32 into r12;
-    gte r3 25u32 into r13;
-    lte r3 36u32 into r14;
-    and r13 r14 into r15;
-    ternary r12 r15 false into r16;
-    ternary r8 r11 r16 into r17;
-    ternary r4 r7 r17 into r18;
-    mul r1 2u64 into r19;
-    add r0.amount r19 into r20;
-    sub r0.amount r1 into r21;
-    ternary r18 r20 r21 into r22;
-    cast r0.owner r22 into r23 as WAC.record;
-    output r23 as WAC.record;
-    output r18 as boolean.private;
-
-
-function dozen_private_update_casino:
-    input r0 as WAC.record;
-    input r1 as boolean.private;
-    input r2 as u64.private;
-    mul r2 2u64 into r3;
-    sub r0.amount r3 into r4;
-    add r0.amount r2 into r5;
-    ternary r1 r4 r5 into r6;
-    cast r0.owner r6 into r7 as WAC.record;
-    output r7 as WAC.record;
-
-
-function make_dozen_bet_public:
-    input r0 as address.public;
-    input r1 as u64.public;
-    input r2 as u32.public;
-    input r3 as u32.public;
-    gt r1 0u64 into r4;
-    assert.eq r4 true;
-    gte r2 1u32 into r5;
-    lte r2 3u32 into r6;
-    and r5 r6 into r7;
-    assert.eq r7 true;
-    async make_dozen_bet_public r0 r1 r2 r3 self.caller into r8;
-    output r8 as cassino_game_test_15.aleo/make_dozen_bet_public.future;
-
-finalize make_dozen_bet_public:
-    input r0 as address.public;
-    input r1 as u64.public;
-    input r2 as u32.public;
-    input r3 as u32.public;
-    input r4 as address.public;
-    is.eq r2 1u32 into r5;
-    gte r3 1u32 into r6;
-    lte r3 12u32 into r7;
-    and r6 r7 into r8;
-    is.eq r2 2u32 into r9;
-    gte r3 13u32 into r10;
-    lte r3 24u32 into r11;
-    and r10 r11 into r12;
-    is.eq r2 3u32 into r13;
-    gte r3 25u32 into r14;
-    lte r3 36u32 into r15;
-    and r14 r15 into r16;
-    ternary r13 r16 false into r17;
-    ternary r9 r12 r17 into r18;
-    ternary r5 r8 r18 into r19;
-    set r19 into winner[r4];
-    get.or_use account[r4] 0u64 into r20;
-    get.or_use account[r0] 0u64 into r21;
-    gte r20 r1 into r22;
-    assert.eq r22 true;
-    mul r1 2u64 into r23;
-    add r20 r23 into r24;
-    mul r1 2u64 into r25;
-    sub r21 r25 into r26;
-    sub r20 r1 into r27;
-    add r21 r1 into r28;
-    ternary r19 r24 r27 into r29;
-    ternary r19 r26 r28 into r30;
-    set r29 into account[r4];
-    set r30 into account[r0];
-
-
-function make_low_high_bet_private:
-    input r0 as WAC.record;
-    input r1 as u64.private;
-    input r2 as boolean.private;
-    input r3 as u32.private;
-    gte r3 1u32 into r4;
-    lte r3 18u32 into r5;
-    and r4 r5 into r6;
-    gte r3 19u32 into r7;
-    lte r3 36u32 into r8;
+    input r3 as [u32; 32u32].public;
+    input r4 as u64.public;
+    set r3 into choice_map[r1];
+    rand.chacha into r5 as u32;
+    rem r5 37u32 into r6;
+    set r6 into random_number_map[r1];
+    not false into r7;
+    is.eq r6 r3[0u32] into r8;
     and r7 r8 into r9;
-    ternary r2 r6 r9 into r10;
-    add r0.amount r1 into r11;
-    sub r0.amount r1 into r12;
-    ternary r10 r11 r12 into r13;
-    cast r0.owner r13 into r14 as WAC.record;
-    output r14 as WAC.record;
-    output r10 as boolean.private;
-
-
-function low_high_private_update_casino:
-    input r0 as WAC.record;
-    input r1 as boolean.private;
-    input r2 as u64.private;
-    sub r0.amount r2 into r3;
-    add r0.amount r2 into r4;
-    ternary r1 r3 r4 into r5;
-    cast r0.owner r5 into r6 as WAC.record;
-    output r6 as WAC.record;
-
-
-function make_low_high_bet_public:
-    input r0 as address.public;
-    input r1 as u64.public;
-    input r2 as boolean.public;
-    input r3 as u32.public;
-    gt r1 0u64 into r4;
-    assert.eq r4 true;
-    async make_low_high_bet_public r0 r1 r2 r3 self.caller into r5;
-    output r5 as cassino_game_test_15.aleo/make_low_high_bet_public.future;
-
-finalize make_low_high_bet_public:
-    input r0 as address.public;
-    input r1 as u64.public;
-    input r2 as boolean.public;
-    input r3 as u32.public;
-    input r4 as address.public;
-    gte r3 1u32 into r5;
-    lte r3 18u32 into r6;
-    and r5 r6 into r7;
-    gte r3 19u32 into r8;
-    lte r3 36u32 into r9;
-    and r8 r9 into r10;
-    ternary r2 r7 r10 into r11;
-    set r11 into winner[r4];
-    get.or_use account[r4] 0u64 into r12;
-    get.or_use account[r0] 0u64 into r13;
-    gte r12 r1 into r14;
-    assert.eq r14 true;
-    add r12 r1 into r15;
-    sub r13 r1 into r16;
-    sub r12 r1 into r17;
-    add r13 r1 into r18;
-    ternary r11 r15 r17 into r19;
-    ternary r11 r16 r18 into r20;
-    set r19 into account[r4];
-    set r20 into account[r0];
-
-
-function make_column_bet_private:
-    input r0 as WAC.record;
-    input r1 as u64.private;
-    input r2 as u32.private;
-    input r3 as u32.private;
-    is.eq r2 1u32 into r4;
-    rem r3 3u32 into r5;
-    is.eq r5 1u32 into r6;
-    is.eq r2 2u32 into r7;
-    rem r3 3u32 into r8;
-    is.eq r8 2u32 into r9;
-    is.eq r2 3u32 into r10;
-    rem r3 3u32 into r11;
-    is.eq r11 0u32 into r12;
-    is.neq r3 0u32 into r13;
-    and r12 r13 into r14;
-    ternary r10 r14 false into r15;
-    ternary r7 r9 r15 into r16;
-    ternary r4 r6 r16 into r17;
-    mul r1 2u64 into r18;
-    add r0.amount r18 into r19;
-    sub r0.amount r1 into r20;
-    ternary r17 r19 r20 into r21;
-    cast r0.owner r21 into r22 as WAC.record;
-    output r22 as WAC.record;
-    output r17 as boolean.private;
-
-
-function column_private_update_casino:
-    input r0 as WAC.record;
-    input r1 as boolean.private;
-    input r2 as u64.private;
-    mul r2 2u64 into r3;
-    sub r0.amount r3 into r4;
-    add r0.amount r2 into r5;
-    ternary r1 r4 r5 into r6;
-    cast r0.owner r6 into r7 as WAC.record;
-    output r7 as WAC.record;
-
-
-function make_column_bet_public:
-    input r0 as address.public;
-    input r1 as u64.public;
-    input r2 as u32.public;
-    input r3 as u32.public;
-    gt r1 0u64 into r4;
-    assert.eq r4 true;
-    gte r2 1u32 into r5;
-    lte r2 3u32 into r6;
-    and r5 r6 into r7;
-    assert.eq r7 true;
-    async make_column_bet_public r0 r1 r2 r3 self.caller into r8;
-    output r8 as cassino_game_test_15.aleo/make_column_bet_public.future;
-
-finalize make_column_bet_public:
-    input r0 as address.public;
-    input r1 as u64.public;
-    input r2 as u32.public;
-    input r3 as u32.public;
-    input r4 as address.public;
-    is.eq r2 1u32 into r5;
-    rem r3 3u32 into r6;
-    is.eq r6 1u32 into r7;
-    is.eq r2 2u32 into r8;
-    rem r3 3u32 into r9;
-    is.eq r9 2u32 into r10;
-    is.eq r2 3u32 into r11;
-    rem r3 3u32 into r12;
-    is.eq r12 0u32 into r13;
-    is.neq r3 0u32 into r14;
-    and r13 r14 into r15;
-    ternary r11 r15 false into r16;
-    ternary r8 r10 r16 into r17;
-    ternary r5 r7 r17 into r18;
-    set r18 into winner[r4];
-    get.or_use account[r4] 0u64 into r19;
-    get.or_use account[r0] 0u64 into r20;
-    gte r19 r1 into r21;
-    assert.eq r21 true;
-    mul r1 2u64 into r22;
-    add r19 r22 into r23;
-    mul r1 2u64 into r24;
-    sub r20 r24 into r25;
-    sub r19 r1 into r26;
-    add r20 r1 into r27;
-    ternary r18 r23 r26 into r28;
-    ternary r18 r25 r27 into r29;
-    set r28 into account[r4];
-    set r29 into account[r0];
+    ternary r9 true false into r10;
+    not r10 into r11;
+    is.eq r6 r3[1u32] into r12;
+    and r11 r12 into r13;
+    ternary r13 true r10 into r14;
+    not r14 into r15;
+    is.eq r6 r3[2u32] into r16;
+    and r15 r16 into r17;
+    ternary r17 true r14 into r18;
+    not r18 into r19;
+    is.eq r6 r3[3u32] into r20;
+    and r19 r20 into r21;
+    ternary r21 true r18 into r22;
+    not r22 into r23;
+    is.eq r6 r3[4u32] into r24;
+    and r23 r24 into r25;
+    ternary r25 true r22 into r26;
+    not r26 into r27;
+    is.eq r6 r3[5u32] into r28;
+    and r27 r28 into r29;
+    ternary r29 true r26 into r30;
+    not r30 into r31;
+    is.eq r6 r3[6u32] into r32;
+    and r31 r32 into r33;
+    ternary r33 true r30 into r34;
+    not r34 into r35;
+    is.eq r6 r3[7u32] into r36;
+    and r35 r36 into r37;
+    ternary r37 true r34 into r38;
+    not r38 into r39;
+    is.eq r6 r3[8u32] into r40;
+    and r39 r40 into r41;
+    ternary r41 true r38 into r42;
+    not r42 into r43;
+    is.eq r6 r3[9u32] into r44;
+    and r43 r44 into r45;
+    ternary r45 true r42 into r46;
+    not r46 into r47;
+    is.eq r6 r3[10u32] into r48;
+    and r47 r48 into r49;
+    ternary r49 true r46 into r50;
+    not r50 into r51;
+    is.eq r6 r3[11u32] into r52;
+    and r51 r52 into r53;
+    ternary r53 true r50 into r54;
+    not r54 into r55;
+    is.eq r6 r3[12u32] into r56;
+    and r55 r56 into r57;
+    ternary r57 true r54 into r58;
+    not r58 into r59;
+    is.eq r6 r3[13u32] into r60;
+    and r59 r60 into r61;
+    ternary r61 true r58 into r62;
+    not r62 into r63;
+    is.eq r6 r3[14u32] into r64;
+    and r63 r64 into r65;
+    ternary r65 true r62 into r66;
+    not r66 into r67;
+    is.eq r6 r3[15u32] into r68;
+    and r67 r68 into r69;
+    ternary r69 true r66 into r70;
+    not r70 into r71;
+    is.eq r6 r3[16u32] into r72;
+    and r71 r72 into r73;
+    ternary r73 true r70 into r74;
+    not r74 into r75;
+    is.eq r6 r3[17u32] into r76;
+    and r75 r76 into r77;
+    ternary r77 true r74 into r78;
+    not r78 into r79;
+    is.eq r6 r3[18u32] into r80;
+    and r79 r80 into r81;
+    ternary r81 true r78 into r82;
+    not r82 into r83;
+    is.eq r6 r3[19u32] into r84;
+    and r83 r84 into r85;
+    ternary r85 true r82 into r86;
+    not r86 into r87;
+    is.eq r6 r3[20u32] into r88;
+    and r87 r88 into r89;
+    ternary r89 true r86 into r90;
+    not r90 into r91;
+    is.eq r6 r3[21u32] into r92;
+    and r91 r92 into r93;
+    ternary r93 true r90 into r94;
+    not r94 into r95;
+    is.eq r6 r3[22u32] into r96;
+    and r95 r96 into r97;
+    ternary r97 true r94 into r98;
+    not r98 into r99;
+    is.eq r6 r3[23u32] into r100;
+    and r99 r100 into r101;
+    ternary r101 true r98 into r102;
+    not r102 into r103;
+    is.eq r6 r3[24u32] into r104;
+    and r103 r104 into r105;
+    ternary r105 true r102 into r106;
+    not r106 into r107;
+    is.eq r6 r3[25u32] into r108;
+    and r107 r108 into r109;
+    ternary r109 true r106 into r110;
+    not r110 into r111;
+    is.eq r6 r3[26u32] into r112;
+    and r111 r112 into r113;
+    ternary r113 true r110 into r114;
+    not r114 into r115;
+    is.eq r6 r3[27u32] into r116;
+    and r115 r116 into r117;
+    ternary r117 true r114 into r118;
+    not r118 into r119;
+    is.eq r6 r3[28u32] into r120;
+    and r119 r120 into r121;
+    ternary r121 true r118 into r122;
+    not r122 into r123;
+    is.eq r6 r3[29u32] into r124;
+    and r123 r124 into r125;
+    ternary r125 true r122 into r126;
+    not r126 into r127;
+    is.eq r6 r3[30u32] into r128;
+    and r127 r128 into r129;
+    ternary r129 true r126 into r130;
+    not r130 into r131;
+    is.eq r6 r3[31u32] into r132;
+    and r131 r132 into r133;
+    ternary r133 true r130 into r134;
+    mul r2 r4 into r135;
+    get.or_use account[r1] 0u64 into r136;
+    get.or_use account[r0] 0u64 into r137;
+    gt r136 r2 into r138;
+    assert.eq r138 true;
+    add r136 r135 into r139;
+    sub r137 r135 into r140;
+    sub r136 r2 into r141;
+    add r137 r2 into r142;
+    ternary r134 r139 r141 into r143;
+    ternary r134 r140 r142 into r144;
+    set r143 into account[r1];
+    set r144 into account[r0];
