@@ -15,8 +15,23 @@ import {
   getEvents,
 } from "@puzzlehq/sdk";
 import { EventType } from "@puzzlehq/types";
+import { useQuery } from "@tanstack/react-query";
 
 function Home() {
+  const getUserFortuneCredit = async () => {
+    const url = `https://api.explorer.aleo.org/v1/testnet3/program/cassino_game_test_fp.aleo/mapping/account/${account?.address}`;
+
+    const response = await fetch(url);
+
+    let data = await response.json();
+
+    return parseInt(data);
+  };
+  const { data: fortuneCredit } = useQuery({
+    queryKey: ["userCredit"],
+    queryFn: getUserFortuneCredit,
+  });
+
   const [yourTurn, theirTurn, totalBalance] = useGameStore((state) => [
     state.yourTurn,
     state.theirTurn,
@@ -32,23 +47,9 @@ function Home() {
     reciever: "aleo1696yxs062yrm0nmvflwcp7zjy0l8l4w8gpr3wn0ql3nttu54ayqsuxqus5",
     amount: "10u64",
   };
-
+  console.log(account?.address);
   const testGetAccount = async () => {
     console.log(account?.address);
-  };
-
-  const testGetMapBalance = async () => {
-    const url = `https://api.explorer.aleo.org/v1/testnet3/program/cassino_game_test_fp.aleo/mapping/account/${account?.address}`;
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      const data = await response.json();
-      console.log(data); // Log or process the data as needed
-    } catch (error) {
-      console.error("There was a problem with the fetch operation:", error);
-    }
   };
 
   const testEvent = async () => {
@@ -150,9 +151,9 @@ function Home() {
   };
 
   return (
-    <div className="flex h-full flex-col justify-between ">
+    <div className="flex h-full flex-col justify-between w-full">
       <div className="flex w-full flex-col gap-4 px-1">
-        <TotalWinnings amount={totalBalance} />
+        <TotalWinnings amount={fortuneCredit!} />
         <Button
           color="yellow"
           onClick={() => {
@@ -164,9 +165,9 @@ function Home() {
         >
           NEW GAME
         </Button>
-        <Button color="green" onClick={() => testGetAccount()}>
+        {/* <Button color="green" onClick={() => testGetAccount()}>
           TEST Account{" "}
-        </Button>
+        </Button> */}
         <Button color="green" onClick={() => testEvent()}>
           TEST Event{" "}
         </Button>
@@ -176,7 +177,7 @@ function Home() {
         <Button color="green" onClick={() => getAllEvents()}>
           GET ALL EVENTS
         </Button>
-        <Button color="green" onClick={() => testGetMapBalance()}>
+        <Button color="green" onClick={() => getUserFortuneCredit()}>
           get key from map{" "}
         </Button>
         <Button color="green" onClick={() => testTransferPublic()}>
@@ -191,18 +192,13 @@ function Home() {
 
         {yourTurn.length > 0 && <YourTurn games={yourTurn} />}
         {theirTurn.length > 0 && <TheirTurn games={theirTurn} />}
-        {yourTurn.length === 0 && theirTurn.length === 0 && (
-          <p className="self-center font-semibold">
-            No ongoing games, start one with a friend!
-          </p>
-        )}
       </div>
       <div className="mt-4 px-4 pb-4 text-center">
         {" "}
         {/* Adding px-4 back here to maintain padding for the bottom button */}
-        <Button color="blue" size="sm">
+        {/* <Button color="blue" size="sm">
           Past Games
-        </Button>
+        </Button> */}
       </div>
     </div>
   );

@@ -20,21 +20,11 @@ export const Welcome = () => {
   return (
     <div className="flex h-full w-full items-stretch justify-between">
       <div className="relative flex h-full w-full flex-col items-center justify-center">
-        <img
-          src={rightImageSrc}
-          alt="Top-right Alex"
-          className="fixed right-0 top-0 h-full max-h-[18rem] max-w-[50%] object-contain"
-        />
-        <img
-          src={leftImageSrc}
-          alt="Left Alex"
-          className="fixed left-0 top-1/4 h-full max-h-[20rem] max-w-[50%] -translate-y-20 object-contain"
-        />
         <h1 className="text-24xl z-10 max-w-full overflow-visible whitespace-nowrap text-center font-extrabold leading-[40.56px] tracking-tight text-primary-white">
           Aleo Fortune
         </h1>
         <p className="z-10 mb-8 mt-8 max-w-[400px] text-center text-base font-bold tracking-tight text-primary-white">
-          Connect your Wallet to play !
+          Connect your Wallet to play Roulette !
         </p>
         <Button
           className="max-w-[250px]"
@@ -44,11 +34,6 @@ export const Welcome = () => {
         >
           {loading ? "Loading..." : loading ? "Connecting..." : "Connect!"}
         </Button>
-        <img
-          src={bottomImageSrc}
-          alt="Bottom Alex"
-          className="center -translate-y-100 fixed bottom-0 h-full max-h-[12rem] w-3/5 max-w-[35%] transform object-contain"
-        />
       </div>
     </div>
   );
